@@ -5,13 +5,13 @@
           <input
           type="text"
           id="searchProfile"
-          v-model="searchProfile"
+          v-model="profileName"
           placeholder="Rechercher un joueur"
           >
         <input
           type="submit"
           id="submit"
-          v-on:click="getInputValue"
+          v-on:click="redirectToProfile()"
         >
       </div>
       </div>
@@ -23,15 +23,23 @@ export default {
   name: 'WelcomePage',
   data() {
     return {
-      searchProfile: '',
+      profileName: '',
     };
   },
   methods: {
     getInputValue() {
-      console.log(this.searchProfile);
+      console.log(this.profileName);
     },
-    getProfileValue() {
-
+    redirectToProfile() {
+      console.log(this);
+      this.$router.push(
+        {
+          name: 'ProfileByUsername',
+          params: {
+            username: this.profileName,
+          },
+        },
+      );
     },
   },
 };
