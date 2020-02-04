@@ -1,1 +1,1 @@
-# Boosted-Detector
+# BoosteDetector
