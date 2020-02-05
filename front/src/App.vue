@@ -9,6 +9,11 @@
 </template>
 
 <style>
+
+@import url('https://fonts.googleapis.com/css?family=Muli&display=swap');
+body{
+  font-family: 'Muli', sans-serif;
+}
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

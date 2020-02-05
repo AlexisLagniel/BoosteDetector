@@ -2,8 +2,12 @@
   <div>
     <top-bar></top-bar>
     <div class="background">
-      <h5>{{username}}</h5>
-      <h5>{{encryptedSummonerId}}</h5>
+      <div class="content">
+        <h2 class="summoner-name">{{username}}</h2>
+        <div class="blocks">
+        </div>
+        <h5>{{encryptedSummonerId}}</h5>
+      </div>
     </div>
   </div>
 </template>
@@ -52,4 +56,13 @@ export default {
     background-position: 50% 0%;
     display: flex;
   }
+  .content{
+    margin: auto;
+  }
+  .summoner-name{
+    color: white;
+    font-family: Muli;
+    font-size: 45px;
+  }
+  .blocks{}
 </style>
