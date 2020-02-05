@@ -11,7 +11,7 @@ const app = express();
 
 app.use(cors());
 
-app.get('/dev', cors(), function (req, res, next) {
+app.get('/profile', cors(), function (req, res, next) {
 	const region = req.query.region;
 	const query = req.query.query;
 	const url = 'https://' + region + '.api.riotgames.com' + query;

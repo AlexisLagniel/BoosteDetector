@@ -1,6 +1,6 @@
 <template>
     <div>
-      <div class="background">
+      <div class="topBar">
         <div class="inputs">
           <input
           type="text"
@@ -9,12 +9,6 @@
           v-on:keyup.enter="redirectToProfile()"
           placeholder="Rechercher un joueur"
           >
-        <input
-          type="submit"
-          id="submit"
-          v-on:click="redirectToProfile()"
-          placeholder=""
-        >
       </div>
       </div>
     </div>
@@ -22,16 +16,13 @@
 
 <script>
 export default {
-  name: 'WelcomePage',
+  name: 'TopBar',
   data() {
     return {
       profileName: '',
     };
   },
   methods: {
-    getInputValue() {
-      console.log(this.profileName);
-    },
     redirectToProfile() {
       this.$router.push(
         {
@@ -44,44 +35,31 @@ export default {
     },
   },
 };
-
 </script>
 
 <style scoped>
-
-  .background{
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-    background-repeat: no-repeat;
-    background-image: url("../assets/images/background3.jpg");
-    background-size: cover;
+  .topBar{
+    width: 100%;
+    height: 60px;
+    background-color: #fbab45;
+    opacity: 0.9;
+    position: fixed;
     display: flex;
   }
   .inputs {
     margin: auto;
     height: 35px;
     display: flex;
+    position: absolute;
+    right: 50px;
+    top: 50%;
+    transform: translateY(-50%);
   }
   #searchProfile {
-    width: 500px;
-    height: 100%;
+    width: 300px;
+    height: 50%;
     opacity: 0.85;
     padding: 5px;
     margin-right: 5px;
-  }
-  #submit {
-    height: 138%!important;
-    background-image: url("../assets/images/monkey-button.png");
-    background-size: cover;
-    background-position: 100% 50%;
-    width: 80px;
-    padding: 5px;
-    cursor: pointer;
-    color: transparent;
-    border: none;
-  }
-  textarea:focus, input:focus{
-    outline: none;
   }
 </style>

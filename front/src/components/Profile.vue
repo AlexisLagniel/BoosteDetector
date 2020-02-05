@@ -1,18 +1,25 @@
 <template>
   <div>
-    <h5>{{username}}</h5>
+    <top-bar></top-bar>
+    <div class="background">
+      <h5>{{username}}</h5>
+      <h5>{{encryptedSummonerId}}</h5>
+    </div>
   </div>
 </template>
 
 <script>
 
 import axios from 'axios';
+import TopBar from './TopBar.vue';
 
 export default {
   name: 'Profile',
+  components: { TopBar },
   data() {
     return {
       username: this.$route.params.username,
+      encryptedSummonerId: '',
     };
   },
   mounted() {
@@ -20,10 +27,13 @@ export default {
   },
   methods: {
     queryInfoByUsername() {
+      const { username } = this;
       axios.get(
-        'https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/Biketeman?api_key=RGAPI-ccdb30eb-5b24-477e-a8d1-d28f8a61c4ff',
+        `http://boostedetector.herokuapp.com/profile?region=euw1&query=%2Flol%2Fsummoner%2Fv4%2Fsummoners%2Fby-name%2F${username}`,
       ).then((response) => {
-        console.log(response);
+        console.log(response.data);
+        this.encryptedSummonerId = response.data.id;
+        console.log(this.encryptedSummonerId);
       });
     },
   },
@@ -31,5 +41,15 @@ export default {
 </script>
 
 <style scoped>
-
+  .background{
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-image: url("../assets/images/monkey.jpg");
+    background-size: auto;
+    background-color: black;
+    background-position: 50% 0%;
+    display: flex;
+  }
 </style>
