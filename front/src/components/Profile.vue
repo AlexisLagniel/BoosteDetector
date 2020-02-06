@@ -24,6 +24,7 @@ export default {
     return {
       username: this.$route.params.username,
       encryptedSummonerId: '',
+      summonerProfileInfo: {},
     };
   },
   mounted() {
@@ -31,16 +32,27 @@ export default {
   },
   methods: {
     queryInfoByUsername() {
-      const { username } = this;
+      // getting the infos for a given summoner name
       axios.get(
-        `http://boostedetector.herokuapp.com/profile?region=euw1&query=%2Flol%2Fsummoner%2Fv4%2Fsummoners%2Fby-name%2F${username}`,
+        `http://boostedetector.herokuapp.com/profile?region=euw1&query=%2Flol%2Fsummoner%2Fv4%2Fsummoners%2Fby-name%2F${this.username}`,
       ).then((response) => {
         console.log(response.data);
         this.encryptedSummonerId = response.data.id;
-        console.log(this.encryptedSummonerId);
+        // querying all the in depth information with the encrypted id
+        this.queryProfileInfoBySummonerId();
+      });
+    },
+    queryProfileInfoBySummonerId() {
+      console.log(this.encryptedSummonerId);
+      axios.get(
+        `http://boostedetector.herokuapp.com/profileInfos?region=euw1&query=%2Flol%2Fleague%2Fv4%2Fentries%2Fby-summoner%2F${this.encryptedSummonerId}`,
+      ).then((response) => {
+        console.log(response.data[0]);
+        this.summonerProfileInfo = response.data[0];
       });
     },
   },
+
 };
 </script>
 
