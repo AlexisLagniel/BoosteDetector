@@ -2,12 +2,15 @@
   <div>
     <top-bar></top-bar>
     <div class="background">
-      <div class="content">
-        <h2 class="summoner-name">{{username}}</h2>
-        <div class="blocks">
-        </div>
-        <h5>{{encryptedSummonerId}}</h5>
-      </div>
+      <b-container class="content">
+        <b-col cols="3">
+          <h2 class="summoner-name">{{username}}</h2>
+            <div class="main-information-block border flex">
+              <img v-bind:src= this.summonerRankImage>
+              <h3>{{summonerProfileInfo[0].summonerName}}</h3>
+            </div>
+        </b-col>
+      </b-container>
     </div>
   </div>
 </template>
@@ -25,6 +28,8 @@ export default {
       username: this.$route.params.username,
       encryptedSummonerId: '',
       summonerProfileInfo: {},
+      dataLoaded: false,
+      summonerRankImage: 'https://helpx.adobe.com/content/dam/help/en/stock/how-to/visual-reverse-image-search/jcr_content/main-pars/image/visual-reverse-image-search-v2_intro.jpg',
     };
   },
   mounted() {
@@ -48,7 +53,9 @@ export default {
         `http://boostedetector.herokuapp.com/profileInfos?region=euw1&query=%2Flol%2Fleague%2Fv4%2Fentries%2Fby-summoner%2F${this.encryptedSummonerId}`,
       ).then((response) => {
         console.log(response.data[0]);
-        this.summonerProfileInfo = response.data[0];
+        this.summonerProfileInfo = response.data;
+        this.dataLoaded = true;
+        console.log(this.summonerProfileInfo[0].leagueId);
       });
     },
   },
@@ -57,24 +64,26 @@ export default {
 </script>
 
 <style scoped>
+  .content{
+    padding: 50px;
+  }
   .background{
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-repeat: no-repeat;
-    background-image: url("../assets/images/monkey.jpg");
-    background-size: auto;
-    background-color: black;
-    background-position: 50% 0%;
     display: flex;
   }
-  .content{
-    margin: auto;
-  }
   .summoner-name{
-    color: white;
     font-family: Muli;
     font-size: 45px;
+    margin-top: 25px;
   }
-  .blocks{}
+  .main-information-block {
+    width: 100%;
+  }
+  .main-information-block img{
+    width: 50px;
+    height: 50px;
+  }
+
 </style>

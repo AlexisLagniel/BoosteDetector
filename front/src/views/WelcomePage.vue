@@ -1,7 +1,11 @@
 <template>
     <div>
       <div class="background">
-        <div class="inputs">
+        <div class="center-content">
+          <div class="main-picture">
+
+          </div>
+          <div class="inputs">
           <input
           type="text"
           id="searchProfile"
@@ -16,6 +20,7 @@
           placeholder=""
         >
       </div>
+        </div>
       </div>
     </div>
 </template>
@@ -53,10 +58,16 @@ export default {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-repeat: no-repeat;
-    background-image: url("../assets/images/background3.jpg");
-    background-size: cover;
+    background-color: #f7f7f7;
     display: flex;
+  }
+  .center-content {
+    display: flex;
+    margin: auto;
+    width: 800px;
+  }
+  .main-picture {
+    width: 100%;
   }
   .inputs {
     margin: auto;
@@ -75,6 +86,7 @@ export default {
     background-image: url("../assets/images/monkey-button.png");
     background-size: cover;
     background-position: 100% 50%;
+    background-color: #00cc66;
     width: 80px;
     padding: 5px;
     cursor: pointer;

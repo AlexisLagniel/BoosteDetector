@@ -1,9 +1,5 @@
 <template>
   <div id="app">
-<!--    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>-->
     <router-view/>
   </div>
 </template>
@@ -13,6 +9,7 @@
 @import url('https://fonts.googleapis.com/css?family=Muli&display=swap');
 body{
   font-family: 'Muli', sans-serif;
+  background-color: #f7f7f7;
 }
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -38,4 +35,5 @@ body{
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
 </style>
