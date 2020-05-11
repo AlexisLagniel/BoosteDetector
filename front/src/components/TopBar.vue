@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import Profile from './Profile.vue';
+
 export default {
   name: 'TopBar',
   data() {
@@ -30,6 +32,7 @@ export default {
           params: {
             username: this.profileName,
           },
+          component: Profile,
         },
       );
     },

@@ -9,6 +9,7 @@ module.exports = {
   ],
   rules: {
     'no-console': 'off',
+    'max-len': 'off',
     'no-restricted-syntax': [
       'error',
       {
