@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Profile from '../components/Profile.vue';
+import Profile from '../views/Profile.vue';
 import WelcomePage from '../views/WelcomePage.vue';
 import Home from '../views/Home.vue';
 

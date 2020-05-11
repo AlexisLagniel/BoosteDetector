@@ -23,7 +23,7 @@
 <script>
 
 import axios from 'axios';
-import TopBar from './TopBar.vue';
+import TopBar from '../components/TopBar.vue';
 
 export default {
   name: 'Profile',
