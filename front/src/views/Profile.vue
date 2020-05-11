@@ -2,7 +2,7 @@
   <div>
     <top-bar></top-bar>
     <div class="background">
-      <b-container class="content">
+      <b-container class="flex content">
         <b-col cols="12">
           <h2 class="summoner-name">{{username}}</h2>
             <div class="main-information-block border flex">
@@ -15,6 +15,8 @@
               </div>
             </div>
         </b-col>
+        <main-component>
+        </main-component>
       </b-container>
     </div>
   </div>
@@ -24,10 +26,11 @@
 
 import axios from 'axios';
 import TopBar from '../components/TopBar.vue';
+import MainComponent from '../components/MainComponent.vue';
 
 export default {
   name: 'Profile',
-  components: { TopBar },
+  components: { TopBar, MainComponent },
   data() {
     return {
       username: this.$route.params.username,
