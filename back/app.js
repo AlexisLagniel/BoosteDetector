@@ -12,7 +12,7 @@ app.get('/profile', cors(), function (req, res, next) {
 	const query = req.query.query;
 	const url = 'https://' + region + '.api.riotgames.com' + query;
 	const headers = {
-		"X-Riot-Token": "RGAPI-8d2a0dbc-1c48-4ea1-aa3d-36ee739800c3",
+		"X-Riot-Token": "RGAPI-19fdfaa1-51c6-4712-93e5-4452b807cb50",
 	};
 	axios.get(url, { headers })
 		.then((resp) => {
@@ -29,7 +29,7 @@ app.get('/profileinfos', cors(), function (req, res, next) {
 	const query = req.query.query;
 	const url = 'https://' + region + '.api.riotgames.com' + query;
 	const headers = {
-		"X-Riot-Token": "RGAPI-8d2a0dbc-1c48-4ea1-aa3d-36ee739800c3",
+		"X-Riot-Token": "RGAPI-19fdfaa1-51c6-4712-93e5-4452b807cb50",
 	};
 	axios.get(url, { headers })
 		.then((resp) => {
