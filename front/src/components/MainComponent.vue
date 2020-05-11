@@ -15,6 +15,7 @@ export default {
       encryptedSummonerId: '',
       backrefs: 'http://localhost:3000',
       matchList: {},
+      singleMatch: {},
     };
   },
   mounted() {
@@ -44,8 +45,8 @@ export default {
       axios.get(
         `${this.backrefs}/profile?region=euw1&query=%2Flol%2Fmatch%2Fv4%2Fmatches%2F${matchId}`,
       ).then((response) => {
-        this.matchList = response.data;
-        console.log(this.matchList);
+        this.singleMatch = response.data;
+        console.log(this.singleMatch);
       });
     },
   },
