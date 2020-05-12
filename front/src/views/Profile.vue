@@ -2,7 +2,7 @@
   <div>
     <top-bar></top-bar>
     <div class="background">
-      <b-container class="flex content">
+      <b-container v-if="dataLoaded" class="flex content">
         <b-col cols="12">
           <h2 class="summoner-name">{{username}}</h2>
             <div class="main-information-block border flex">
@@ -12,6 +12,7 @@
                 <p class="level nomargin">{{summonerGenralInfo.summonerLevel}}</p>
                 <p>{{summonerProfileInfo[0].tier}}{{' ' + summonerProfileInfo[0].rank}}</p>
                 <img v-bind:src="require('../assets/images/ranked-emblems/Emblem_' + summonerProfileInfo[0].tier + '.png')">
+                <p>{{summonerProfileInfo[0].leaguePoints}} LP </p>
               </div>
             </div>
         </b-col>

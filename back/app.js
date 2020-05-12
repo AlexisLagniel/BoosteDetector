@@ -12,7 +12,7 @@ app.get('/profile', cors(), function (req, res, next) {
 	const query = req.query.query;
 	const url = 'https://' + region + '.api.riotgames.com' + query;
 	const headers = {
-		"X-Riot-Token": "RGAPI-19fdfaa1-51c6-4712-93e5-4452b807cb50",
+		"X-Riot-Token": "RGAPI-6bd637da-2501-4ff5-a48e-907a4c9b4bd7",
 	};
 	axios.get(url, { headers })
 		.then((resp) => {
@@ -29,7 +29,7 @@ app.get('/profileinfos', cors(), function (req, res, next) {
 	const query = req.query.query;
 	const url = 'https://' + region + '.api.riotgames.com' + query;
 	const headers = {
-		"X-Riot-Token": "RGAPI-19fdfaa1-51c6-4712-93e5-4452b807cb50",
+		"X-Riot-Token": "RGAPI-6bd637da-2501-4ff5-a48e-907a4c9b4bd7",
 	};
 	axios.get(url, { headers })
 		.then((resp) => {
@@ -40,6 +40,9 @@ app.get('/profileinfos', cors(), function (req, res, next) {
 			return res.status(500).send();
 		});
 });
+app.get('/products/', cors(), function (req, res, next) {
+  res.json({msg: 'This is CORS-enabled for a Single Route'})
+})
 
 app.listen(port, function () {
  console.log('Example app listening on port ' + port + '!');
