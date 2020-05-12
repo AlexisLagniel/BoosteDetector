@@ -5,6 +5,7 @@
 </template>
 <script>
 import axios from 'axios';
+import champions from './champions.json';
 
 export default {
   name: 'mainComponent',
@@ -17,10 +18,12 @@ export default {
       matchList: [],
       rawMatchList: {},
       matchListDetails: [],
+      champions,
     };
   },
   mounted() {
     this.queryInfoByUsername();
+    console.log(this.champions);
   },
   methods: {
     queryInfoByUsername() {
