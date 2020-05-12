@@ -14,8 +14,9 @@ export default {
       accountId: '',
       encryptedSummonerId: '',
       backrefs: 'http://localhost:3000',
-      matchList: {},
-      singleMatch: {},
+      matchList: [],
+      rawMatchList: {},
+      matchListDetails: [],
     };
   },
   mounted() {
@@ -34,20 +35,26 @@ export default {
     },
     retrieveMatchesList() {
       axios.get(
-        `${this.backrefs}/profile?region=euw1&query=%2Flol%2Fmatch%2Fv4%2Fmatchlists%2Fby-account%2F_zejQIzOTIL_3K0Vr6cFQeus5IKjqIjw6tAhrYSiOzH5uw?beginIndex=0${this.encryptedSummonerId}`,
+        `${this.backrefs}/profile?region=euw1&query=%2Flol%2Fmatch%2Fv4%2Fmatchlists%2Fby-account%2F_zejQIzOTIL_3K0Vr6cFQeus5IKjqIjw6tAhrYSiOzH5uw${this.encryptedSummonerId}?endIndex=10&beginIndex=0`,
       ).then((response) => {
-        this.matchList = response.data;
-        console.log(this.matchList);
+        this.rawMatchList = response.data;
       });
     },
     fetchSingleMatchData() {
-      const matchId = 4591669407;
-      axios.get(
-        `${this.backrefs}/profile?region=euw1&query=%2Flol%2Fmatch%2Fv4%2Fmatches%2F${matchId}`,
-      ).then((response) => {
-        this.singleMatch = response.data;
-        console.log(this.singleMatch);
-      });
+      const matchListIds = [];
+      const matchlist = this.rawMatchList.matches;
+      for (const match of matchlist) {
+        matchListIds.push(match.gameId);
+      }
+      console.log(matchListIds);
+      for (const matchId of matchListIds) {
+        axios.get(
+          `${this.backrefs}/profile?region=euw1&query=%2Flol%2Fmatch%2Fv4%2Fmatches%2F${matchId}`,
+        ).then((response) => {
+          this.matchListDetails.push(response.data);
+        });
+      }
+      console.log(this.matchListDetails);
     },
   },
 };
