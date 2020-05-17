@@ -4,6 +4,7 @@ const port = process.env.PORT || 3000;
 const cors = require('cors');
 const axios = require('axios');
 const app = express();
+const token = 'RGAPI-c48fb712-4e43-4175-adab-e1f6bacbafc5';
 
 app.use(cors());
 
@@ -12,7 +13,7 @@ app.get('/profile', cors(), function (req, res, next) {
 	const query = req.query.query;
 	const url = 'https://' + region + '.api.riotgames.com' + query;
 	const headers = {
-		"X-Riot-Token": "RGAPI-6bd637da-2501-4ff5-a48e-907a4c9b4bd7",
+		"X-Riot-Token": token,
 	};
 	axios.get(url, { headers })
 		.then((resp) => {
@@ -29,7 +30,7 @@ app.get('/profileinfos', cors(), function (req, res, next) {
 	const query = req.query.query;
 	const url = 'https://' + region + '.api.riotgames.com' + query;
 	const headers = {
-		"X-Riot-Token": "RGAPI-6bd637da-2501-4ff5-a48e-907a4c9b4bd7",
+		"X-Riot-Token": token,
 	};
 	axios.get(url, { headers })
 		.then((resp) => {
