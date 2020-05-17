@@ -17,6 +17,7 @@ export default {
       backrefs: 'http://localhost:3000',
       rawMatchList: {},
       matchListDetails: [],
+      test: 'lol',
       champions,
     };
   },
@@ -24,9 +25,9 @@ export default {
     this.queryInfoByUsername();
   },
   methods: {
-    queryInfoByUsername() {
+    async queryInfoByUsername() {
       // getting the infos for a given summoner name
-      axios.get(
+      await axios.get(
         `${this.backrefs}/profile?region=euw1&query=%2Flol%2Fsummoner%2Fv4%2Fsummoners%2Fby-name%2F${this.username}`,
       ).then((response) => {
         this.encryptedSummonerId = response.data.id;
@@ -35,8 +36,9 @@ export default {
       this.retrieveMatchesList();
     },
     retrieveMatchesList() {
+      console.log(this.encryptedSummonerId);
       axios.get(
-        `${this.backrefs}/profile?region=euw1&query=%2Flol%2Fmatch%2Fv4%2Fmatchlists%2Fby-account%2F_zejQIzOTIL_3K0Vr6cFQeus5IKjqIjw6tAhrYSiOzH5uw${this.encryptedSummonerId}?endIndex=10&beginIndex=0`,
+        `${this.backrefs}/profile?region=euw1&query=%2Flol%2Fmatch%2Fv4%2Fmatchlists%2Fby-account%2F${this.accountId}?endIndex=10&beginIndex=0&queue=420`,
       ).then((response) => {
         this.rawMatchList = response.data;
       });
@@ -65,7 +67,7 @@ export default {
     fetchIndividualPerformance() {
       // eslint-disable-next-line guard-for-in
       for (const individualMatch of this.matchListDetails) {
-        console.log(individualMatch.gameCreation);
+        console.log(individualMatch);
       }
     },
   },
