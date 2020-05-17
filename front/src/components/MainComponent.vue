@@ -17,7 +17,6 @@ export default {
       backrefs: 'http://localhost:3000',
       rawMatchList: {},
       matchListDetails: [],
-      test: [{ test: 'jpp' }, 21, 2, 3],
       champions,
     };
   },
@@ -42,17 +41,19 @@ export default {
         this.rawMatchList = response.data;
       });
     },
-    fetchSingleMatchData() {
+    async fetchSingleMatchData() {
       const matchListIds = [];
       const matchlist = this.rawMatchList.matches;
       for (const match of matchlist) {
+        // eslint-disable-next-line no-await-in-loop
         matchListIds.push(match.gameId);
       }
       if (this.matchListDetails.length > 0) {
         console.log('already done');
       } else {
         for (const matchId of matchListIds) {
-          axios.get(
+          // eslint-disable-next-line no-await-in-loop
+          await axios.get(
             `${this.backrefs}/profile?region=euw1&query=%2Flol%2Fmatch%2Fv4%2Fmatches%2F${matchId}`,
           ).then((response) => {
             this.matchListDetails.push(response.data);
@@ -62,18 +63,9 @@ export default {
       }
     },
     fetchIndividualPerformance() {
-      console.log(this.matchListDetails);
-      // const { matchListDetails } = this;
-      const { test } = this;
-
-      console.log(this.matchListDetails);
-      // eslint-disable-next-line no-debugger
-      // debugger;
-      console.log(test[0].test);
       // eslint-disable-next-line guard-for-in
       for (const individualMatch of this.matchListDetails) {
-        console.log(individualMatch);
-        console.log('zgu');
+        console.log(individualMatch.gameCreation);
       }
     },
   },
