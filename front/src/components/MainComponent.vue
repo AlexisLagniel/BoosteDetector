@@ -17,7 +17,7 @@ export default {
       backrefs: 'http://localhost:3000',
       rawMatchList: {},
       matchListDetails: [],
-      test: 'lol',
+      individualGamesPerformances: [],
       champions,
     };
   },
@@ -66,8 +66,27 @@ export default {
     },
     fetchIndividualPerformance() {
       // eslint-disable-next-line guard-for-in
+      // const gatheredStats = [];
+      let participantId;
+      function getTeamInfos(id) {
+        if (id >= 4) {
+          return 0;
+        }
+        return 1;
+      }
       for (const individualMatch of this.matchListDetails) {
         console.log(individualMatch);
+        for (const player of individualMatch.participantIdentities) {
+          if (player.player.accountId === this.accountId) {
+            const individualGameStats = [];
+            // eslint-disable-next-line prefer-destructuring
+            participantId = player.participantId;
+            console.log(participantId);
+            const teamInfos = getTeamInfos(participantId);
+            console.log(`aa${teamInfos}`);
+            individualGameStats.push(individualMatch.teams[teamInfos]);
+          }
+        }
       }
     },
   },
