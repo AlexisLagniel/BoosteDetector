@@ -65,8 +65,7 @@ export default {
       }
     },
     fetchIndividualPerformance() {
-      // eslint-disable-next-line guard-for-in
-      // const gatheredStats = [];
+      const gatheredStats = [];
       let participantId;
       function getTeamInfos(id) {
         if (id >= 4) {
@@ -81,10 +80,21 @@ export default {
             const individualGameStats = [];
             // eslint-disable-next-line prefer-destructuring
             participantId = player.participantId;
-            console.log(participantId);
-            const teamInfos = getTeamInfos(participantId);
-            console.log(`aa${teamInfos}`);
-            individualGameStats.push(individualMatch.teams[teamInfos]);
+            const teamId = getTeamInfos(participantId);
+            individualGameStats.push(
+              {
+                win: individualMatch.teams[teamId].win,
+                baronKills: individualMatch.teams[teamId].baronKills,
+                dragonKills: individualMatch.teams[teamId].dragonKills,
+                firstBlood: individualMatch.teams[teamId].firstBlood,
+                towerKills: individualMatch.teams[teamId].towerKills,
+                individualStats: individualMatch.participants[participantId],
+              },
+            );
+            gatheredStats.push(individualGameStats);
+            console.log(gatheredStats);
+            // eslint-disable-next-line no-restricted-syntax
+            // console.table(individualGameStats);
           }
         }
       }
