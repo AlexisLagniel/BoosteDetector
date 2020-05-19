@@ -23,6 +23,7 @@ export default {
   },
   mounted() {
     this.queryInfoByUsername();
+    console.log(this.champions.data);
   },
   methods: {
     async queryInfoByUsername() {
@@ -81,6 +82,7 @@ export default {
             // eslint-disable-next-line prefer-destructuring
             participantId = player.participantId;
             const teamId = getTeamInfos(participantId);
+            // console.log(individualMatch.participants[participantId].championId);
             individualGameStats.push(
               {
                 win: individualMatch.teams[teamId].win,
@@ -88,16 +90,16 @@ export default {
                 dragonKills: individualMatch.teams[teamId].dragonKills,
                 firstBlood: individualMatch.teams[teamId].firstBlood,
                 towerKills: individualMatch.teams[teamId].towerKills,
-                individualStats: individualMatch.participants[participantId],
+                individualStats: individualMatch.participants[participantId - 1],
+                name: player.player.summonerName,
               },
             );
             gatheredStats.push(individualGameStats);
-            console.log(gatheredStats);
-            // eslint-disable-next-line no-restricted-syntax
-            // console.table(individualGameStats);
           }
         }
       }
+      // eslint-disable-next-line no-restricted-syntax
+      console.table(gatheredStats);
     },
   },
 };
