@@ -22,8 +22,8 @@ export default {
     };
   },
   mounted() {
+    console.log(this.getChampionById(56));
     this.queryInfoByUsername();
-    console.log(this.champions.data);
   },
   methods: {
     async queryInfoByUsername() {
@@ -100,6 +100,21 @@ export default {
       }
       // eslint-disable-next-line no-restricted-syntax
       console.table(gatheredStats);
+    },
+    getChampionById(id) {
+      console.log(this.champions.data);
+
+      // eslint-disable-next-line guard-for-in
+      for (const champion in champions.data) {
+        // const parsedJson = JSON.parse(champion);
+        // console.log(parsedJson);
+        console.log(champion);
+        if (champion.key === id) {
+          // return champion.name;
+          console.log('champezaaaaaaaaion');
+        }
+      }
+      // return false;
     },
   },
 };
