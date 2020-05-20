@@ -1,14 +1,17 @@
 <template>
   <div class="container">
     <p @click="fetchSingleMatchData">testFetchdata</p>
+    <analysis v-bind:props-data="gatheredStats"></analysis>
   </div>
 </template>
 <script>
 import axios from 'axios';
+import Analysis from './Analysis.vue';
 import champions from './champions.json';
 
 export default {
   name: 'mainComponent',
+  components: { Analysis },
   data() {
     return {
       username: this.$route.params.username,
