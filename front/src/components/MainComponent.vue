@@ -22,7 +22,7 @@ export default {
     };
   },
   mounted() {
-    console.log(champions);
+    console.log(this.champions);
     this.queryInfoByUsername();
   },
   methods: {
