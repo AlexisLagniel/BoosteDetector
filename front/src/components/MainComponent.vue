@@ -22,7 +22,7 @@ export default {
     };
   },
   mounted() {
-    console.log(this.getChampionById(56));
+    console.log(this.getChampionById(143));
     this.queryInfoByUsername();
   },
   methods: {
@@ -106,12 +106,13 @@ export default {
 
       // eslint-disable-next-line guard-for-in
       for (const champion in champions.data) {
-        // const parsedJson = JSON.parse(champion);
-        // console.log(parsedJson);
-        console.log(champion);
-        if (champion.key === id) {
-          // return champion.name;
-          console.log('champezaaaaaaaaion');
+        // console.log(champions.data[champion]);
+        console.log(id);
+        console.log(champions.data[champion].key);
+        if (champions.data[champion].key === id) {
+          console.log('alley');
+          console.log(champions.data[champion].name);
+          // return champions.data[champion].name;
         }
       }
       // return false;
