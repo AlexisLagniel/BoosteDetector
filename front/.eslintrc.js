@@ -10,6 +10,7 @@ module.exports = {
   rules: {
     'no-console': 'off',
     'max-len': 'off',
+    'eqeqeq': 'off',
     'no-restricted-syntax': [
       'error',
       {

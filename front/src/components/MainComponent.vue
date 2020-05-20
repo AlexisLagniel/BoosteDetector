@@ -17,12 +17,12 @@ export default {
       backrefs: 'http://localhost:3000',
       rawMatchList: {},
       matchListDetails: [],
-      individualGamesPerformances: [],
+      gatheredStats: [],
       champions,
     };
   },
   mounted() {
-    console.log(this.getChampionById(143));
+    console.log(champions);
     this.queryInfoByUsername();
   },
   methods: {
@@ -75,14 +75,13 @@ export default {
         return 1;
       }
       for (const individualMatch of this.matchListDetails) {
-        console.log(individualMatch);
         for (const player of individualMatch.participantIdentities) {
           if (player.player.accountId === this.accountId) {
             const individualGameStats = [];
             // eslint-disable-next-line prefer-destructuring
             participantId = player.participantId;
             const teamId = getTeamInfos(participantId);
-            // console.log(individualMatch.participants[participantId].championId);
+            const championNameQueried = this.getChampionById(individualMatch.participants[participantId - 1].championId);
             individualGameStats.push(
               {
                 win: individualMatch.teams[teamId].win,
@@ -91,31 +90,27 @@ export default {
                 firstBlood: individualMatch.teams[teamId].firstBlood,
                 towerKills: individualMatch.teams[teamId].towerKills,
                 individualStats: individualMatch.participants[participantId - 1],
+                championId: individualMatch.participants[participantId - 1].championId,
+                championName: championNameQueried,
                 name: player.player.summonerName,
               },
             );
             gatheredStats.push(individualGameStats);
+            this.gatheredStats = gatheredStats;
           }
         }
       }
       // eslint-disable-next-line no-restricted-syntax
-      console.table(gatheredStats);
+      console.table(this.gatheredStats);
     },
     getChampionById(id) {
-      console.log(this.champions.data);
-
       // eslint-disable-next-line guard-for-in
       for (const champion in champions.data) {
-        // console.log(champions.data[champion]);
-        console.log(id);
-        console.log(champions.data[champion].key);
-        if (champions.data[champion].key === id) {
-          console.log('alley');
-          console.log(champions.data[champion].name);
-          // return champions.data[champion].name;
+        if (champions.data[champion].key == id) {
+          return champions.data[champion].name;
         }
       }
-      // return false;
+      return false;
     },
   },
 };
