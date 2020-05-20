@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <p @click="fetchSingleMatchData">testFetchdata</p>
-    <analysis v-bind:props-data="gatheredStats"></analysis>
+    <analysis v-bind:props-data="gatheredStats" class="chart"></analysis>
   </div>
 </template>
 <script>
@@ -120,5 +120,9 @@ export default {
 };
 </script>
 <style>
+.chart {
+  width: 250px;
+  height: 250px;
+}
 
 </style>

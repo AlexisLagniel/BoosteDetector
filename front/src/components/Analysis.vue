@@ -1,7 +1,7 @@
 <template>
     <div>
       <p @click="getPropsData()">Check My DATA</p>
-      <bar-chart :chart-data="datacollection"></bar-chart>
+      <bar-chart v-if="dataCollection" :chartData="dataCollection"></bar-chart>
     </div>
 </template>
 
@@ -21,11 +21,26 @@ export default {
   },
   data() {
     return {
+      dataCollection: {
+        labels: [23, 8, 0, 44],
+        datasets: [
+          {
+            label: 'Data One',
+            backgroundColor: '#f87979',
+            data: [23, 11, 8, 31],
+          }, {
+            label: 'Data two',
+            backgroundColor: '#f87979',
+            data: [23, 14, 75, 94],
+          },
+        ],
+      },
     };
   },
   methods: {
     getPropsData() {
       console.log(this.propsData);
+      console.log(this.dataCollection);
     },
   },
 };
