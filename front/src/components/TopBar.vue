@@ -44,7 +44,7 @@ export default {
     height: 60px;
     background-color: #00cc66;
     opacity: 0.9;
-    position: fixed;
+    position: relative;
     display: flex;
   }
   .inputs {

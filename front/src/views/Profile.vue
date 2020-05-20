@@ -2,12 +2,11 @@
   <div>
     <top-bar></top-bar>
     <div class="background">
-      <b-container v-if="dataLoaded" class="flex content">
-        <b-col cols="12">
-          <h2 class="summoner-name">{{username}}</h2>
+      <b-container v-if="dataLoaded" class="flex main-content content">
+        <div class="12 profile">
             <div class="main-information-block border flex">
               <img v-bind:src=this.summonerProfileImage>
-              <div>
+              <div class="profile-text nomargin">
                 <h3>{{summonerProfileInfo[1].summonerName}}</h3>
                 <p class="level nomargin">{{summonerGenralInfo.summonerLevel}}</p>
                 <p>{{summonerProfileInfo[1].tier}}{{' ' + summonerProfileInfo[1].rank}}</p>
@@ -15,8 +14,8 @@
                 <p>{{summonerProfileInfo[1].leaguePoints}} LP </p>
               </div>
             </div>
-        </b-col>
-        <main-component>
+        </div>
+        <main-component class="border main-component">
         </main-component>
       </b-container>
     </div>
@@ -84,18 +83,13 @@ export default {
     padding: 50px;
   }
   .background{
-    width: 100vw;
+    max-width: 100vw;
     height: 100vh;
     overflow: hidden;
     display: flex;
   }
-  .summoner-name{
-    font-family: Muli;
-    font-size: 45px;
-    margin-top: 25px;
-  }
   .main-information-block {
-    width: 100%;
+    width: 300px;
     background-color: white;
   }
   .main-information-block img{
@@ -109,6 +103,20 @@ export default {
   .nomargin{
     margin: 0;
     padding: 0;
+  }
+  .main-content {
+    width: 100%;
+  }
+  .profile {
+    width: 33.333%;
+  }
+  .profile-text {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .main-component {
+    width: 66.666%;
+    background-color: white;
   }
 
 </style>
