@@ -1,6 +1,7 @@
 <template>
     <div>
       <p @click="getWinRate()">Check My DATA</p>
+      <p @click="test">randomiNT</p>
       <div class="stat-line">
         <div class="individualGraph">
           <bar-chart v-if="dataCollection" :chartData="dataCollection"></bar-chart>
@@ -74,6 +75,11 @@ export default {
     };
   },
   methods: {
+    test() {
+      console.log(this.winRateCollection.datasets);
+      this.winRateCollection.datasets[1].data.push(154);
+      this.winRateCollection.datasets[0].data.push(this.winRate);
+    },
     getRandomInt() {
       return Math.floor(Math.random() * (50 - 5 + 1)) + 5;
     },
