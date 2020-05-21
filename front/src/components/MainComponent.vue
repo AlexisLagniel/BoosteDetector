@@ -26,7 +26,6 @@ export default {
     };
   },
   mounted() {
-    console.log(this.champions);
     this.queryInfoByUsername();
   },
   methods: {
@@ -72,8 +71,8 @@ export default {
     fetchIndividualPerformance() {
       const gatheredStats = [];
       let participantId;
-      function getTeamInfos(id) {
-        if (id >= 4) {
+      function getTeamInfos(teamId) {
+        if (teamId === 100) {
           return 0;
         }
         return 1;
@@ -84,11 +83,12 @@ export default {
             const individualGameStats = [];
             // eslint-disable-next-line prefer-destructuring
             participantId = player.participantId;
-            const teamId = getTeamInfos(participantId);
+            const teamId = getTeamInfos(individualMatch.participants[participantId - 1].teamId);
             const championNameQueried = this.getChampionById(individualMatch.participants[participantId - 1].championId);
             individualGameStats.push(
               {
                 win: individualMatch.teams[teamId].win,
+                teamId: individualMatch.participants[participantId - 1].teamId,
                 baronKills: individualMatch.teams[teamId].baronKills,
                 dragonKills: individualMatch.teams[teamId].dragonKills,
                 firstBlood: individualMatch.teams[teamId].firstBlood,
@@ -120,9 +120,5 @@ export default {
 };
 </script>
 <style>
-.chart {
-  width: 250px;
-  height: 250px;
-}
 
 </style>

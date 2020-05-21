@@ -11,6 +11,8 @@ module.exports = {
     'no-console': 'off',
     'max-len': 'off',
     eqeqeq: 'off',
+    'no-unused-vars': 'off',
+    'no-await-in-loop': 'off',
     'no-restricted-syntax': [
       'error',
       {

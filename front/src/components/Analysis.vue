@@ -1,32 +1,53 @@
 <template>
     <div>
-      <p @click="getPropsData()">Check My DATA</p>
-      <bar-chart v-if="dataCollection" :chartData="dataCollection"></bar-chart>
+      <p @click="getWinRate()">Check My DATA</p>
+      <div class="stat-line">
+        <div class="individualGraph">
+          <bar-chart v-if="dataCollection" :chartData="dataCollection"></bar-chart>
+        </div>
+        <div class="individualGraph">
+          <doughnut :chartData="winRateCollection" :winrate="winRate"></doughnut>
+        </div>
+      </div>
     </div>
 </template>
 
 <script>
 import BarChart from './charts/barChart';
+import Doughnut from './charts/doughnut';
 
 export default {
   name: 'Analysis',
   components: {
     BarChart,
+    Doughnut,
   },
   mounted() {
-    console.log(this.propsData);
   },
   props: {
     propsData: Array,
   },
+  watch: {
+    // winRate() {
+    //   // eslint-disable-next-line no-underscore-dangle
+    //   this.winRateCollection._chart.update();
+    //   console.log('yo');
+    // },
+  },
+  computed: {
+    winRateComputed() {
+      return this.winRate;
+    },
+  },
   data() {
     return {
+      winRate: 0,
       dataCollection: {
         labels: [23, 8, 0, 44],
         datasets: [
           {
             label: 'Data One',
-            backgroundColor: '#f87979',
+            backgroundColor: '#b3ffd9',
             data: [23, 11, 8, 31],
           }, {
             label: 'Data two',
@@ -35,17 +56,55 @@ export default {
           },
         ],
       },
+      winRateCollection: {
+        labels: ['Winrate'],
+        datasets: [
+          {
+            label: 'Win',
+            backgroundColor: '#b3ffd9',
+            data: [this.getRandomInt()],
+          },
+          {
+            label: 'Lose',
+            backgroundColor: '#f87979',
+            data: [this.winRate],
+          },
+        ],
+      },
     };
   },
   methods: {
-    getPropsData() {
+    getRandomInt() {
+      return Math.floor(Math.random() * (50 - 5 + 1)) + 5;
+    },
+    async getWinRate() {
       console.log(this.propsData);
-      console.log(this.dataCollection);
+      let win = 0;
+      let lose = 0;
+      for (const game of this.propsData) {
+        if (game[0].win === 'Win') {
+          await (win += 1);
+        } else if (game[0].win === 'Fail') {
+          await (lose += 1);
+        } else {
+          await console.log(game[0].win);
+        }
+      }
+      if (lose + win === this.propsData.length) {
+        const winrate = (win / this.propsData.length) * 100;
+        this.winRate = winrate;
+        console.log(`winrate: ${this.winRate}%`);
+      }
     },
   },
 };
 </script>
 
 <style scoped>
-
+.stat-line{
+  display: flex;
+}
+.individualGraph{
+  width: 50%;
+}
 </style>
