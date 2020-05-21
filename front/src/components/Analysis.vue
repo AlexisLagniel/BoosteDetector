@@ -1,20 +1,24 @@
 <template>
     <div>
       <p @click="getWinRate()">Check My DATA</p>
-      <p @click="test">randomiNT</p>
       <div class="stat-line">
         <div class="individualGraph">
           <bar-chart v-if="dataCollection" :chartData="dataCollection"></bar-chart>
+          <p @click="fillData()">test</p>
         </div>
         <div class="individualGraph">
-          <doughnut :chartData="winRateCollection" :winrate="winRate"></doughnut>
+          <doughnut v-if="winRate" :chartData="winRateCollection"></doughnut>
         </div>
       </div>
+      <div class="stat-line">
+      </div>
+
     </div>
 </template>
 
 <script>
 import BarChart from './charts/barChart';
+import LineChart from './charts/lineChart';
 import Doughnut from './charts/doughnut';
 
 export default {
@@ -23,65 +27,58 @@ export default {
     BarChart,
     Doughnut,
   },
+  watch: {
+    winRate() {
+      this.fillData();
+    },
+    propsData() {
+      this.getWinRate();
+    },
+  },
   mounted() {
+    this.fillData();
   },
   props: {
     propsData: Array,
   },
-  watch: {
-    // winRate() {
-    //   // eslint-disable-next-line no-underscore-dangle
-    //   this.winRateCollection._chart.update();
-    //   console.log('yo');
-    // },
-  },
   computed: {
-    winRateComputed() {
-      return this.winRate;
-    },
   },
   data() {
     return {
       winRate: 0,
-      dataCollection: {
+      dataCollection: null,
+      winRateCollection: null,
+    };
+  },
+  methods: {
+    getRandomInt() {
+      return Math.floor(Math.random() * (50 - 5 + 1)) + 5;
+    },
+    fillData() {
+      this.dataCollection = {
         labels: [23, 8, 0, 44],
         datasets: [
           {
             label: 'Data One',
             backgroundColor: '#b3ffd9',
-            data: [23, 11, 8, 31],
+            data: [this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt()],
           }, {
             label: 'Data two',
             backgroundColor: '#f87979',
-            data: [23, 14, 75, 94],
+            data: [this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt()],
           },
         ],
-      },
-      winRateCollection: {
-        labels: ['Winrate'],
+      };
+      this.winRateCollection = {
+        labels: ['Win', 'Lose'],
         datasets: [
           {
             label: 'Win',
-            backgroundColor: '#b3ffd9',
-            data: [this.getRandomInt()],
-          },
-          {
-            label: 'Lose',
-            backgroundColor: '#f87979',
-            data: [this.winRate],
+            backgroundColor: ['#b3ffd9', '#f87979'],
+            data: [this.winRate, 100 - this.winRate],
           },
         ],
-      },
-    };
-  },
-  methods: {
-    test() {
-      console.log(this.winRateCollection.datasets);
-      this.winRateCollection.datasets[1].data.push(154);
-      this.winRateCollection.datasets[0].data.push(this.winRate);
-    },
-    getRandomInt() {
-      return Math.floor(Math.random() * (50 - 5 + 1)) + 5;
+      };
     },
     async getWinRate() {
       console.log(this.propsData);
@@ -101,6 +98,10 @@ export default {
         this.winRate = winrate;
         console.log(`winrate: ${this.winRate}%`);
       }
+    },
+    getToxicChampions() {
+    },
+    getRoleVariety() {
     },
   },
 };

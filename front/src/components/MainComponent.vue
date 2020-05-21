@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <p @click="fetchSingleMatchData">testFetchdata</p>
     <analysis v-bind:props-data="gatheredStats" class="chart"></analysis>
   </div>
 </template>
@@ -40,11 +39,11 @@ export default {
       this.retrieveMatchesList();
     },
     retrieveMatchesList() {
-      console.log(this.encryptedSummonerId);
       axios.get(
         `${this.backrefs}/profile?region=euw1&query=%2Flol%2Fmatch%2Fv4%2Fmatchlists%2Fby-account%2F${this.accountId}?endIndex=${this.amountOfGames}&beginIndex=0&queue=420`,
       ).then((response) => {
         this.rawMatchList = response.data;
+        this.fetchSingleMatchData();
       });
     },
     async fetchSingleMatchData() {
