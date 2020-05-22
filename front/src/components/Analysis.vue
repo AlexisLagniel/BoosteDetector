@@ -3,7 +3,7 @@
       <p @click="getWinRate()">Check My DATA</p>
       <div class="stat-line">
         <div class="individualGraph">
-          <bar-chart v-if="dataCollection" :chartData="dataCollection"></bar-chart>
+          <bar-chart v-if="roleVarietyCollection" :chartData="roleVarietyCollection"></bar-chart>
           <p @click="fillData()">test</p>
         </div>
         <div class="individualGraph">
@@ -30,22 +30,23 @@ export default {
   watch: {
     winRate() {
       this.fillData();
+      console.log(this.roleVariety[0].top);
     },
     propsData() {
       this.getWinRate();
+      this.getRoleVariety();
     },
   },
   mounted() {
-    this.fillData();
   },
   props: {
     propsData: Array,
   },
-  computed: {
-  },
   data() {
     return {
       winRate: 0,
+      roleVariety: [],
+      roleVarietyCollection: null,
       dataCollection: null,
       winRateCollection: null,
     };
@@ -79,6 +80,16 @@ export default {
           },
         ],
       };
+      this.roleVarietyCollection = {
+        labels: ['Top', 'Jungle', 'Mid', 'Adc', 'Support', 'Not ranked'],
+        datasets: [
+          {
+            label: ['Roles'],
+            backgroundColor: '#b3ffd9',
+            data: [this.roleVariety[0].top, this.roleVariety[0].jungle, this.roleVariety[0].mid, this.roleVariety[0].adc, this.roleVariety[0].support, this.roleVariety[0].notRanked],
+          },
+        ],
+      };
     },
     async getWinRate() {
       console.log(this.propsData);
@@ -96,12 +107,60 @@ export default {
       if (lose + win === this.propsData.length) {
         const winrate = (win / this.propsData.length) * 100;
         this.winRate = winrate;
-        console.log(`winrate: ${this.winRate}%`);
       }
     },
     getToxicChampions() {
     },
-    getRoleVariety() {
+    getRole(game) {
+      console.log(game.individualStats.timeline.lane);
+    },
+    async getRoleVariety() {
+      const roleVarietyArray = [];
+      let jungle = 0;
+      let middle = 0;
+      let adc = 0;
+      let top = 0;
+      let notRanked = 0;
+      let support = 0;
+      for (const game of this.propsData) {
+        const { lane } = game[0].individualStats.timeline;
+        const { role } = game[0].individualStats.timeline;
+        console.log(lane);
+        console.log(role);
+        switch (lane) {
+          case 'JUNGLE':
+            jungle += 1;
+            break;
+          case 'BOTTOM':
+            if (role === 'DUO_SUPPORT') {
+              support += 1;
+            } else {
+              adc += 1;
+            }
+            break;
+          case 'TOP':
+            top += 1;
+            break;
+          case 'NONE':
+            notRanked += 1;
+            break;
+          case 'MIDDLE':
+            middle += 1;
+            break;
+          default:
+            console.log('lane error');
+        }
+      }
+      roleVarietyArray.push({
+        middle,
+        jungle,
+        adc,
+        top,
+        support,
+        notRanked,
+      });
+      this.roleVariety = roleVarietyArray;
+      console.log(this.roleVariety);
     },
   },
 };
