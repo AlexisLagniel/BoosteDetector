@@ -11,6 +11,12 @@
         </div>
       </div>
       <div class="stat-line">
+        <div class="individualGraph">
+          <doughnut v-if="amountOfToxicChampsCollection" :chartData="amountOfToxicChampsCollection"></doughnut>
+        </div>
+        <div class="individualGraph">
+          <doughnut v-if="globalWinRateCollection" :chartData="globalWinRateCollection"></doughnut>
+        </div>
       </div>
 
     </div>
@@ -46,10 +52,14 @@ export default {
   data() {
     return {
       winRate: 0,
+      globalWinRate: 0,
+      amountOfGames: 0,
       roleVariety: [],
       roleVarietyCollection: null,
       dataCollection: null,
       winRateCollection: null,
+      amountOfToxicChampsCollection: null,
+      globalWinRateCollection: null,
       toxicChampions: [{
         tier: 1,
         list: ['Evelynn', 'Ilaoi', 'Master Yi', 'Mordekaiser', 'Senna', 'Sylas', 'Talon'],
@@ -62,6 +72,9 @@ export default {
         tier: 3,
         list: ['Irelia', 'Katarina', 'Qiyanna', 'Rengar', 'Shyvana', 'Yasuo', 'Yummi', 'Zoe'],
       }],
+      mainChampion: null,
+      toxicChampsPlayed: [],
+      amountOfToxicChamps: 0,
     };
   },
   methods: {
@@ -93,6 +106,26 @@ export default {
           },
         ],
       };
+      this.globalWinRateCollection = {
+        labels: ['Win', 'Lose'],
+        datasets: [
+          {
+            label: 'Win',
+            backgroundColor: ['#b3ffd9', '#f87979'],
+            data: [this.globalWinRate, 100 - this.globalWinRate],
+          },
+        ],
+      };
+      this.amountOfToxicChampsCollection = {
+        labels: ['Toxic', 'Not toxic'],
+        datasets: [
+          {
+            label: 'Win',
+            backgroundColor: ['#f87979', '#b3ffd9'],
+            data: [((this.amountOfToxicChamps / this.propsData.length) * 100).toFixed(0), 100 - ((this.amountOfToxicChamps / this.propsData.length) * 100).toFixed(0)],
+          },
+        ],
+      };
       this.roleVarietyCollection = {
         labels: ['Top', 'Jungle', 'Mid', 'Adc', 'Support', 'Not ranked'],
         datasets: [
@@ -105,6 +138,8 @@ export default {
       };
     },
     async getWinRate() {
+      this.globalWinRate = this.propsData[0][0].globalWinRate;
+      this.amountOfGames = this.propsData[0].amountOfGames;
       console.log(this.propsData);
       let win = 0;
       let lose = 0;
@@ -135,7 +170,9 @@ export default {
     calculatePlayerChampionPool() {
       let amountOfToxicChamps = 0;
       const toxicChampsPlayed = [];
+      const playedChampionsList = [];
       for (const game of this.propsData) {
+        playedChampionsList.push(game[0].championName);
         const championToxicity = this.getChampionToxicity(game[0].championName);
         if (championToxicity !== 1) {
           amountOfToxicChamps += 1;
@@ -146,6 +183,16 @@ export default {
           console.log(toxicChampsPlayed);
         }
       }
+      console.log(playedChampionsList);
+      function findMainChamp(list) {
+        return list.sort((a, b) => list.filter(v => v === a).length
+        - list.filter(v => v === b).length).pop();
+      }
+      if (playedChampionsList.length === this.propsData.length) {
+        this.mainChampion = findMainChamp(playedChampionsList);
+      }
+      this.amountOfToxicChamps = amountOfToxicChamps;
+      this.toxicChampsPlayed = toxicChampsPlayed;
     },
     getRole(game) {
       console.log(game.individualStats.timeline.lane);

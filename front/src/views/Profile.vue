@@ -9,16 +9,13 @@
               <div class="profile-text nomargin">
                 <h3>{{summonerProfileInfo[defineSoloQueuePlaceInData()].summonerName}}</h3>
                 <p class="level nomargin">{{summonerGenralInfo.summonerLevel}}</p>
-                <p v-if="summonerProfileInfo[0].queueType === 'RANKED_SOLO_5x5'">Solo queue:{{summonerProfileInfo[0].tier}}{{' ' + summonerProfileInfo[0].rank}}</p>
-                <p v-else>Flex:{{summonerProfileInfo[1].tier}}{{' ' + summonerProfileInfo[1].rank}}</p>
-                <img v-if="summonerProfileInfo[0].queueType === 'RANKED_SOLO_5x5'" v-bind:src="require('../assets/images/ranked-emblems/Emblem_' + summonerProfileInfo[0].tier + '.png')">
-                <img v-else v-bind:src="require('../assets/images/ranked-emblems/Emblem_' + summonerProfileInfo[1].tier + '.png')">
-                <p v-if="summonerProfileInfo[0].queueType === 'RANKED_SOLO_5x5'">{{summonerProfileInfo[0].leaguePoints}} LP </p>
-                <p v-else>{{summonerProfileInfo[1].leaguePoints}} LP </p>
+                <p>{{summonerProfileInfo[defineSoloQueuePlaceInData()].tier}}{{' ' + summonerProfileInfo[defineSoloQueuePlaceInData()].rank}}</p>
+                <img v-bind:src="require('../assets/images/ranked-emblems/Emblem_' + summonerProfileInfo[defineSoloQueuePlaceInData()].tier + '.png')">
+                <p>{{summonerProfileInfo[defineSoloQueuePlaceInData()].leaguePoints}} LP </p>
               </div>
             </div>
         </div>
-        <main-component class="border main-component">
+        <main-component v-bind:amount-of-games="amountOfGames" :global-win-rate="globalWinRate"  class="border main-component">
         </main-component>
       </b-container>
     </div>
@@ -43,6 +40,8 @@ export default {
       dataLoaded: false,
       summonerProfileImage: '',
       backrefs: 'http://localhost:3000',
+      globalWinRate: 0,
+      amountOfGames: 0,
     };
   },
   mounted() {
@@ -74,6 +73,7 @@ export default {
         const rankIcon = '../../assets/images/ranked-emblems/Emblem_Bronze.png';
         this.summonerRankImage = rankIcon;
         this.dataLoaded = true;
+        this.getGlobalWinRate();
       });
     },
     defineSoloQueuePlaceInData() {
@@ -82,6 +82,14 @@ export default {
         return 0;
       }
       return 1;
+    },
+    getGlobalWinRate() {
+      const { wins } = this.summonerProfileInfo[this.defineSoloQueuePlaceInData()];
+      const { losses } = this.summonerProfileInfo[this.defineSoloQueuePlaceInData()];
+      const amountOfGames = wins + losses;
+      const globalWinRate = ((wins / amountOfGames) * 100).toFixed(1);
+      this.globalWinRate = globalWinRate;
+      this.amountOfGames = amountOfGames;
     },
   },
 

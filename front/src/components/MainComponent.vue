@@ -20,9 +20,13 @@ export default {
       rawMatchList: {},
       matchListDetails: [],
       gatheredStats: [],
-      amountOfGames: 10,
+      amountOfGamesToFetch: 10,
       champions,
     };
+  },
+  props: {
+    globalWinRate: String,
+    amountOfGames: Number,
   },
   mounted() {
     this.queryInfoByUsername();
@@ -40,7 +44,7 @@ export default {
     },
     retrieveMatchesList() {
       axios.get(
-        `${this.backrefs}/profile?region=euw1&query=%2Flol%2Fmatch%2Fv4%2Fmatchlists%2Fby-account%2F${this.accountId}?endIndex=${this.amountOfGames}&beginIndex=0&queue=420`,
+        `${this.backrefs}/profile?region=euw1&query=%2Flol%2Fmatch%2Fv4%2Fmatchlists%2Fby-account%2F${this.accountId}?endIndex=${this.amountOfGamesToFetch}&beginIndex=0&queue=420`,
       ).then((response) => {
         this.rawMatchList = response.data;
         this.fetchSingleMatchData();
@@ -96,6 +100,8 @@ export default {
                 championId: individualMatch.participants[participantId - 1].championId,
                 championName: championNameQueried,
                 name: player.player.summonerName,
+                globalWinRate: this.globalWinRate,
+                amountOfGames: this.amountOfGames,
               },
             );
             gatheredStats.push(individualGameStats);
