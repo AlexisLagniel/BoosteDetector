@@ -7,11 +7,14 @@
             <div class="main-information-block border flex">
               <img v-bind:src=this.summonerProfileImage>
               <div class="profile-text nomargin">
-                <h3>{{summonerProfileInfo[1].summonerName}}</h3>
+                <h3>{{summonerProfileInfo[defineSoloQueuePlaceInData()].summonerName}}</h3>
                 <p class="level nomargin">{{summonerGenralInfo.summonerLevel}}</p>
-                <p>{{summonerProfileInfo[1].tier}}{{' ' + summonerProfileInfo[1].rank}}</p>
-                <img v-bind:src="require('../assets/images/ranked-emblems/Emblem_' + summonerProfileInfo[1].tier + '.png')">
-                <p>{{summonerProfileInfo[1].leaguePoints}} LP </p>
+                <p v-if="summonerProfileInfo[0].queueType === 'RANKED_SOLO_5x5'">Solo queue:{{summonerProfileInfo[0].tier}}{{' ' + summonerProfileInfo[0].rank}}</p>
+                <p v-else>Flex:{{summonerProfileInfo[1].tier}}{{' ' + summonerProfileInfo[1].rank}}</p>
+                <img v-if="summonerProfileInfo[0].queueType === 'RANKED_SOLO_5x5'" v-bind:src="require('../assets/images/ranked-emblems/Emblem_' + summonerProfileInfo[0].tier + '.png')">
+                <img v-else v-bind:src="require('../assets/images/ranked-emblems/Emblem_' + summonerProfileInfo[1].tier + '.png')">
+                <p v-if="summonerProfileInfo[0].queueType === 'RANKED_SOLO_5x5'">{{summonerProfileInfo[0].leaguePoints}} LP </p>
+                <p v-else>{{summonerProfileInfo[1].leaguePoints}} LP </p>
               </div>
             </div>
         </div>
@@ -72,6 +75,13 @@ export default {
         this.summonerRankImage = rankIcon;
         this.dataLoaded = true;
       });
+    },
+    defineSoloQueuePlaceInData() {
+      const player = this.summonerProfileInfo;
+      if (player[0].queueType === 'RANKED_SOLO_5x5') {
+        return 0;
+      }
+      return 1;
     },
   },
 

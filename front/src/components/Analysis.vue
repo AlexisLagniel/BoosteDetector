@@ -30,14 +30,15 @@ export default {
   watch: {
     winRate() {
       this.fillData();
-      console.log(this.roleVariety[0].top);
     },
     propsData() {
       this.getWinRate();
       this.getRoleVariety();
+      this.calculatePlayerChampionPool();
     },
   },
   mounted() {
+    this.getChampionToxicity('Ilaoi');
   },
   props: {
     propsData: Array,
@@ -49,6 +50,18 @@ export default {
       roleVarietyCollection: null,
       dataCollection: null,
       winRateCollection: null,
+      toxicChampions: [{
+        tier: 1,
+        list: ['Evelynn', 'Ilaoi', 'Master Yi', 'Mordekaiser', 'Senna', 'Sylas', 'Talon'],
+      },
+      {
+        tier: 2,
+        list: ['Akali', 'Aphelios', 'Diana', 'Fizz', 'Kassadin', 'Sett', 'Teemo', 'Tryndamere', 'Vladimir', 'Zed', 'Kayn'],
+      },
+      {
+        tier: 3,
+        list: ['Irelia', 'Katarina', 'Qiyanna', 'Rengar', 'Shyvana', 'Yasuo', 'Yummi', 'Zoe'],
+      }],
     };
   },
   methods: {
@@ -109,7 +122,30 @@ export default {
         this.winRate = winrate;
       }
     },
-    getToxicChampions() {
+    getChampionToxicity(champion) {
+      if (this.toxicChampions[0].list.includes(champion)) {
+        return 2;
+      } if (this.toxicChampions[1].list.includes(champion)) {
+        return 3;
+      } if (this.toxicChampions[2].list.includes(champion)) {
+        return 4;
+      }
+      return 1;
+    },
+    calculatePlayerChampionPool() {
+      let amountOfToxicChamps = 0;
+      const toxicChampsPlayed = [];
+      for (const game of this.propsData) {
+        const championToxicity = this.getChampionToxicity(game[0].championName);
+        if (championToxicity !== 1) {
+          amountOfToxicChamps += 1;
+          if (!toxicChampsPlayed.includes(game[0].championName)) {
+            toxicChampsPlayed.push(game[0].championName);
+          }
+          console.log(amountOfToxicChamps);
+          console.log(toxicChampsPlayed);
+        }
+      }
     },
     getRole(game) {
       console.log(game.individualStats.timeline.lane);
@@ -125,8 +161,6 @@ export default {
       for (const game of this.propsData) {
         const { lane } = game[0].individualStats.timeline;
         const { role } = game[0].individualStats.timeline;
-        console.log(lane);
-        console.log(role);
         switch (lane) {
           case 'JUNGLE':
             jungle += 1;
@@ -160,7 +194,6 @@ export default {
         notRanked,
       });
       this.roleVariety = roleVarietyArray;
-      console.log(this.roleVariety);
     },
   },
 };
