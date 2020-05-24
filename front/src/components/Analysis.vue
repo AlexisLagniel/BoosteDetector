@@ -24,8 +24,15 @@
         </div>
       </div>
       <div class="stat-line">
-        <div>
-          <line-chart v-if="kdaTrackingCollection" :chartData="kdaTrackingCollection" :options="options"></line-chart>
+        <div class="individualGraph">
+          <div>
+            <line-chart v-if="kdaTrackingCollection" :chartData="kdaTrackingCollection" :options="options"></line-chart>
+          </div>
+        </div>
+        <div class="individualGraph">
+          <div>
+            <radar-chart v-if="visionCollection" :chartData="visionCollection" :options="options"></radar-chart>
+          </div>
         </div>
       </div>
     </div>
@@ -35,6 +42,7 @@
 import BarChart from './charts/barChart';
 import LineChart from './charts/lineChart';
 import Doughnut from './charts/doughnut';
+import RadarChart from './charts/radar';
 
 export default {
   name: 'Analysis',
@@ -42,6 +50,7 @@ export default {
     BarChart,
     Doughnut,
     LineChart,
+    RadarChart,
   },
   watch: {
     winRate() {
@@ -73,6 +82,7 @@ export default {
       averageKdaCollection: null,
       globalWinRateCollection: null,
       kdaTrackingCollection: null,
+      visionCollection: null,
       toxicChampions: [{
         tier: 1,
         list: ['Evelynn', 'Ilaoi', 'Master Yi', 'Mordekaiser', 'Senna', 'Sylas', 'Talon'],
@@ -91,16 +101,16 @@ export default {
       options: {
         responsive: true,
         maintainAspectRatio: true,
+        // scales: {
+        //   yAxes: [{
+        //     ticks: {
+        //       beginAtZero: true,
+        //     },
+        //   }],
+        // },
       },
+      kdaData: {},
       averageKda: 0,
-      averageAssists: 0,
-      averageKills: 0,
-      averageDeaths: 0,
-      kdaTracking: [],
-      killsTracking: [],
-      assistsTracking: [],
-      deathsTracking: [],
-      test: [1, 23, 4, 15],
     };
   },
   methods: {
@@ -108,6 +118,20 @@ export default {
       return Math.floor(Math.random() * (50 - 5 + 1)) + 5;
     },
     fillData() {
+      const that = this;
+      function fullFillTrackingDataLabels() {
+        const targetLabel = that.kdaData.gameLabels;
+        const targetData = that.kdaData.killsTracking;
+        for (const gameLabel of targetLabel) {
+          that.kdaTrackingCollection.labels.push(gameLabel);
+        }
+        for (const [i, value] of targetData.entries()) {
+          that.kdaTrackingCollection.datasets[0].data.push(that.kdaData.killsTracking[i]);
+          that.kdaTrackingCollection.datasets[1].data.push(that.kdaData.deathsTracking[i]);
+          that.kdaTrackingCollection.datasets[2].data.push(that.kdaData.assistsTracking[i]);
+          that.kdaTrackingCollection.datasets[3].data.push(that.kdaData.kdaTracking[i]);
+        }
+      }
       this.winRateCollection = {
         labels: ['Win', 'Lose'],
         datasets: [
@@ -154,35 +178,51 @@ export default {
           {
             label: ['Stats'],
             backgroundColor: '#b3ffd9',
-            data: [this.averageKills, this.averageDeaths, this.averageAssists, this.averageKda],
+            data: [this.kdaData.averageKills, this.kdaData.averageDeaths, this.kdaData.averageAssists, this.kdaData.averageKda],
           },
         ],
       };
       this.kdaTrackingCollection = {
-        labels: ['Average Kills', 'Average Deaths', 'Average Assists', 'Average KDA'],
+        labels: [],
         datasets: [
           {
             label: ['Kills'],
-            backgroundColor: '#b3ffd9',
-            data: [1, 25, 12, 14, 13],
+            fill: false,
+            borderColor: '#b3ffd9',
+            data: [],
           },
           {
             label: ['Deaths'],
-            backgroundColor: '#f87979',
-            data: [this.deathsTracking],
+            fill: false,
+            borderColor: '#f87979',
+            data: [],
           },
           {
             label: ['Assists'],
-            backgroundColor: '#AF33FF',
-            data: [this.assistsTracking],
+            fill: false,
+            borderColor: '#ffed52',
+            data: [],
           },
           {
             label: ['Kda'],
-            backgroundColor: '#35E7E7',
-            data: [this.kdaTracking],
+            fill: false,
+            borderColor: '#35E7E7',
+            data: [],
           },
         ],
       };
+      this.visionCollection = {
+        labels: ['Average VisionScore', 'Average Vision Wards Bought', 'Average Wards Placed'],
+        datasets: [
+          {
+            label: ['Vision Scores'],
+            backgroundColor: ['rgba(200,0,0,0.2)'],
+            data: [this.kdaData.averageVisionScore, this.kdaData.averageVisionWardsBoughtInGame, this.kdaData.averageWardsPlaced],
+          },
+        ],
+      };
+
+      fullFillTrackingDataLabels();
     },
     async getWinRate() {
       this.globalWinRate = this.propsData[0][0].globalWinRate;
@@ -228,7 +268,6 @@ export default {
           }
         }
       }
-      console.log(playedChampionsList);
       function findMainChamp(list) {
         return list.sort((a, b) => list.filter(v => v === a).length
         - list.filter(v => v === b).length).pop();
@@ -296,6 +335,12 @@ export default {
       const assistsCollection = [];
       const killsCollection = [];
       const deathsCollection = [];
+      const gameLabels = [];
+      let amountOfGames = 0;
+      let averageVisionScore = 0;
+      let averageGameDuration = 0;
+      let averageWardsPlaced = 0;
+      let averageVisionWardsBoughtInGame = 0;
       function getKda(individualGame) {
         const { kills } = individualGame[0].individualStats.stats;
         const { deaths } = individualGame[0].individualStats.stats;
@@ -309,24 +354,40 @@ export default {
         assistsCollection.push(assists);
         killsCollection.push(kills);
         deathsCollection.push(deaths);
-        // console.log(this.kdaTrackingCollection);
-        console.log(kda);
       }
+
+      function getVisionScore(individualGame) {
+        const { gameDuration } = individualGame[0];
+        const { visionScore } = individualGame[0].individualStats.stats;
+        const { wardsPlaced } = individualGame[0].individualStats.stats;
+        const { visionWardsBoughtInGame } = individualGame[0].individualStats.stats;
+        averageVisionScore += visionScore;
+        averageGameDuration += gameDuration;
+        averageWardsPlaced += wardsPlaced;
+        averageVisionWardsBoughtInGame += visionWardsBoughtInGame;
+      }
+
       for (const game of this.propsData) {
         getKda(game);
+        amountOfGames += 1;
+        gameLabels.push((`game ${amountOfGames}( ${game[0].championName})`));
+        getVisionScore(game);
       }
-      this.averageDeaths = (averageDeaths / this.propsData.length).toFixed(1);
-      this.averageKills = (averageKills / this.propsData.length).toFixed(1);
-      this.averageAssists = (averageAssists / this.propsData.length).toFixed(1);
-      this.averageKda = (averageKda / this.propsData.length).toFixed(1);
-      this.kdaTracking = kdaCollection;
-      this.killsTracking = killsCollection;
-      this.deathsTracking = deathsCollection;
-      this.assistsTracking = assistsCollection;
-      console.log(this.kdaTracking);
-      console.log(this.killsTracking);
-      console.log(this.deathsTracking);
-      console.log(this.assistsTracking);
+      this.kdaData.averageDeaths = (averageDeaths / this.propsData.length).toFixed(1);
+      this.kdaData.averageDeaths = (averageDeaths / this.propsData.length).toFixed(1);
+      this.kdaData.averageKills = (averageKills / this.propsData.length).toFixed(1);
+      this.kdaData.averageAssists = (averageAssists / this.propsData.length).toFixed(1);
+      this.kdaData.averageKda = (averageKda / this.propsData.length).toFixed(1);
+      this.kdaData.kdaTracking = kdaCollection;
+      this.kdaData.killsTracking = killsCollection;
+      this.kdaData.deathsTracking = deathsCollection;
+      this.kdaData.assistsTracking = assistsCollection;
+      this.kdaData.gameLabels = gameLabels;
+      this.kdaData.averageVisionScore = (averageVisionScore / this.propsData.length).toFixed(1);
+      this.kdaData.averageGameDuration = (averageGameDuration / this.propsData.length).toFixed(1);
+      this.kdaData.averageWardsPlaced = (averageWardsPlaced / this.propsData.length).toFixed(1);
+      this.kdaData.averageVisionWardsBoughtInGame = (averageVisionWardsBoughtInGame / this.propsData.length).toFixed(1);
+      console.log(this.kdaData);
     },
   },
 };

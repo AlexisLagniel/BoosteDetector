@@ -102,6 +102,7 @@ export default {
                 name: player.player.summonerName,
                 globalWinRate: this.globalWinRate,
                 amountOfGames: this.amountOfGames,
+                gameDuration: individualMatch.gameDuration,
               },
             );
             gatheredStats.push(individualGameStats);
