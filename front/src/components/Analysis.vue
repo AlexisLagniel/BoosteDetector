@@ -1,10 +1,8 @@
 <template>
     <div>
-      <p @click="getWinRate()">Check My DATA</p>
       <div class="stat-line">
         <div class="individualGraph">
           <bar-chart v-if="roleVarietyCollection" :chartData="roleVarietyCollection" :options="options"></bar-chart>
-          <p @click="fillData()">test</p>
         </div>
         <div class="individualGraph">
           <doughnut v-if="winRate" :chartData="winRateCollection" :options="options"></doughnut>
@@ -73,7 +71,7 @@ export default {
     return {
       winRate: 0,
       globalWinRate: 0,
-      amountOfGames: 0,
+      totalAmountOfGames: 0,
       roleVariety: [],
       roleVarietyCollection: null,
       dataCollection: null,
@@ -226,7 +224,7 @@ export default {
     },
     async getWinRate() {
       this.globalWinRate = this.propsData[0][0].globalWinRate;
-      this.amountOfGames = this.propsData[0].amountOfGames;
+      this.totalAmountOfGames = this.propsData[0][0].amountOfGames;
       console.log(this.propsData);
       let win = 0;
       let lose = 0;
@@ -341,6 +339,8 @@ export default {
       let averageGameDuration = 0;
       let averageWardsPlaced = 0;
       let averageVisionWardsBoughtInGame = 0;
+      let visionScorePerMinute = 0;
+      let championToxicityScore = 0;
       function getKda(individualGame) {
         const { kills } = individualGame[0].individualStats.stats;
         const { deaths } = individualGame[0].individualStats.stats;
@@ -364,11 +364,17 @@ export default {
         averageVisionScore += visionScore;
         averageGameDuration += gameDuration;
         averageWardsPlaced += wardsPlaced;
+        visionScorePerMinute += (visionScore / (gameDuration / 60));
         averageVisionWardsBoughtInGame += visionWardsBoughtInGame;
+      }
+      function getMultiKills(individualGame) {
+
       }
 
       for (const game of this.propsData) {
         getKda(game);
+        const champion = this.getChampionToxicity(game[0].championName);
+        championToxicityScore += champion;
         amountOfGames += 1;
         gameLabels.push((`game ${amountOfGames}( ${game[0].championName})`));
         getVisionScore(game);
@@ -384,9 +390,11 @@ export default {
       this.kdaData.assistsTracking = assistsCollection;
       this.kdaData.gameLabels = gameLabels;
       this.kdaData.averageVisionScore = (averageVisionScore / this.propsData.length).toFixed(1);
-      this.kdaData.averageGameDuration = (averageGameDuration / this.propsData.length).toFixed(1);
+      this.kdaData.averageGameDuration = ((averageGameDuration / this.propsData.length) / 60).toFixed(1);
       this.kdaData.averageWardsPlaced = (averageWardsPlaced / this.propsData.length).toFixed(1);
       this.kdaData.averageVisionWardsBoughtInGame = (averageVisionWardsBoughtInGame / this.propsData.length).toFixed(1);
+      this.kdaData.averageVisionScorePerMinute = (visionScorePerMinute / this.propsData.length).toFixed(1);
+      this.kdaData.championToxicityScore = championToxicityScore;
       console.log(this.kdaData);
     },
   },
