@@ -102,7 +102,6 @@ export default {
   }
   .background{
     max-width: 100vw;
-    height: 100vh;
     overflow: hidden;
     display: flex;
   }

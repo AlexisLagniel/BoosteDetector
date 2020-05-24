@@ -3,22 +3,31 @@
       <p @click="getWinRate()">Check My DATA</p>
       <div class="stat-line">
         <div class="individualGraph">
-          <bar-chart v-if="roleVarietyCollection" :chartData="roleVarietyCollection"></bar-chart>
+          <bar-chart v-if="roleVarietyCollection" :chartData="roleVarietyCollection" :options="options"></bar-chart>
           <p @click="fillData()">test</p>
         </div>
         <div class="individualGraph">
-          <doughnut v-if="winRate" :chartData="winRateCollection"></doughnut>
+          <doughnut v-if="winRate" :chartData="winRateCollection" :options="options"></doughnut>
         </div>
       </div>
       <div class="stat-line">
         <div class="individualGraph">
-          <doughnut v-if="amountOfToxicChampsCollection" :chartData="amountOfToxicChampsCollection"></doughnut>
+          <doughnut v-if="amountOfToxicChampsCollection" :chartData="amountOfToxicChampsCollection" :options="options"></doughnut>
         </div>
         <div class="individualGraph">
-          <doughnut v-if="globalWinRateCollection" :chartData="globalWinRateCollection"></doughnut>
+          <doughnut v-if="globalWinRateCollection" :chartData="globalWinRateCollection" :options="options"></doughnut>
         </div>
       </div>
-
+      <div class="stat-line">
+        <div class="individualGraph">
+          <bar-chart v-if="averageKdaCollection" :chartData="averageKdaCollection" :options="options"></bar-chart>
+        </div>
+      </div>
+      <div class="stat-line">
+        <div>
+          <line-chart v-if="kdaTrackingCollection" :chartData="kdaTrackingCollection" :options="options"></line-chart>
+        </div>
+      </div>
     </div>
 </template>
 
@@ -32,6 +41,7 @@ export default {
   components: {
     BarChart,
     Doughnut,
+    LineChart,
   },
   watch: {
     winRate() {
@@ -41,6 +51,7 @@ export default {
       this.getWinRate();
       this.getRoleVariety();
       this.calculatePlayerChampionPool();
+      this.singleGameAnalysis();
     },
   },
   mounted() {
@@ -59,7 +70,9 @@ export default {
       dataCollection: null,
       winRateCollection: null,
       amountOfToxicChampsCollection: null,
+      averageKdaCollection: null,
       globalWinRateCollection: null,
+      kdaTrackingCollection: null,
       toxicChampions: [{
         tier: 1,
         list: ['Evelynn', 'Ilaoi', 'Master Yi', 'Mordekaiser', 'Senna', 'Sylas', 'Talon'],
@@ -75,6 +88,19 @@ export default {
       mainChampion: null,
       toxicChampsPlayed: [],
       amountOfToxicChamps: 0,
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+      },
+      averageKda: 0,
+      averageAssists: 0,
+      averageKills: 0,
+      averageDeaths: 0,
+      kdaTracking: [],
+      killsTracking: [],
+      assistsTracking: [],
+      deathsTracking: [],
+      test: [1, 23, 4, 15],
     };
   },
   methods: {
@@ -82,20 +108,6 @@ export default {
       return Math.floor(Math.random() * (50 - 5 + 1)) + 5;
     },
     fillData() {
-      this.dataCollection = {
-        labels: [23, 8, 0, 44],
-        datasets: [
-          {
-            label: 'Data One',
-            backgroundColor: '#b3ffd9',
-            data: [this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt()],
-          }, {
-            label: 'Data two',
-            backgroundColor: '#f87979',
-            data: [this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt()],
-          },
-        ],
-      };
       this.winRateCollection = {
         labels: ['Win', 'Lose'],
         datasets: [
@@ -133,6 +145,41 @@ export default {
             label: ['Roles'],
             backgroundColor: '#b3ffd9',
             data: [this.roleVariety[0].top, this.roleVariety[0].jungle, this.roleVariety[0].mid, this.roleVariety[0].adc, this.roleVariety[0].support, this.roleVariety[0].notRanked],
+          },
+        ],
+      };
+      this.averageKdaCollection = {
+        labels: ['Average Kills', 'Average Deaths', 'Average Assists', 'Average KDA'],
+        datasets: [
+          {
+            label: ['Stats'],
+            backgroundColor: '#b3ffd9',
+            data: [this.averageKills, this.averageDeaths, this.averageAssists, this.averageKda],
+          },
+        ],
+      };
+      this.kdaTrackingCollection = {
+        labels: ['Average Kills', 'Average Deaths', 'Average Assists', 'Average KDA'],
+        datasets: [
+          {
+            label: ['Kills'],
+            backgroundColor: '#b3ffd9',
+            data: [1, 25, 12, 14, 13],
+          },
+          {
+            label: ['Deaths'],
+            backgroundColor: '#f87979',
+            data: [this.deathsTracking],
+          },
+          {
+            label: ['Assists'],
+            backgroundColor: '#AF33FF',
+            data: [this.assistsTracking],
+          },
+          {
+            label: ['Kda'],
+            backgroundColor: '#35E7E7',
+            data: [this.kdaTracking],
           },
         ],
       };
@@ -179,8 +226,6 @@ export default {
           if (!toxicChampsPlayed.includes(game[0].championName)) {
             toxicChampsPlayed.push(game[0].championName);
           }
-          console.log(amountOfToxicChamps);
-          console.log(toxicChampsPlayed);
         }
       }
       console.log(playedChampionsList);
@@ -241,6 +286,47 @@ export default {
         notRanked,
       });
       this.roleVariety = roleVarietyArray;
+    },
+    singleGameAnalysis() {
+      let averageKda = 0;
+      let averageKills = 0;
+      let averageDeaths = 0;
+      let averageAssists = 0;
+      const kdaCollection = [];
+      const assistsCollection = [];
+      const killsCollection = [];
+      const deathsCollection = [];
+      function getKda(individualGame) {
+        const { kills } = individualGame[0].individualStats.stats;
+        const { deaths } = individualGame[0].individualStats.stats;
+        const { assists } = individualGame[0].individualStats.stats;
+        const kda = (kills + assists) / deaths;
+        averageKda += kda;
+        averageKills += kills;
+        averageDeaths += deaths;
+        averageAssists += assists;
+        kdaCollection.push(kda);
+        assistsCollection.push(assists);
+        killsCollection.push(kills);
+        deathsCollection.push(deaths);
+        // console.log(this.kdaTrackingCollection);
+        console.log(kda);
+      }
+      for (const game of this.propsData) {
+        getKda(game);
+      }
+      this.averageDeaths = (averageDeaths / this.propsData.length).toFixed(1);
+      this.averageKills = (averageKills / this.propsData.length).toFixed(1);
+      this.averageAssists = (averageAssists / this.propsData.length).toFixed(1);
+      this.averageKda = (averageKda / this.propsData.length).toFixed(1);
+      this.kdaTracking = kdaCollection;
+      this.killsTracking = killsCollection;
+      this.deathsTracking = deathsCollection;
+      this.assistsTracking = assistsCollection;
+      console.log(this.kdaTracking);
+      console.log(this.killsTracking);
+      console.log(this.deathsTracking);
+      console.log(this.assistsTracking);
     },
   },
 };
