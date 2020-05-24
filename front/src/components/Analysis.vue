@@ -341,15 +341,30 @@ export default {
       let averageVisionWardsBoughtInGame = 0;
       let visionScorePerMinute = 0;
       let championToxicityScore = 0;
+      const doubleKillCollection = [];
+      const tripleKillCollection = [];
+      const quadraKillCollection = [];
+      const pentaKillCollection = [];
+      let averageDoubleKill = 0;
+      let averageTripleKill = 0;
+      let averageQuadraKill = 0;
+      let averagePentaKill = 0;
       function getKda(individualGame) {
         const { kills } = individualGame[0].individualStats.stats;
         const { deaths } = individualGame[0].individualStats.stats;
         const { assists } = individualGame[0].individualStats.stats;
-        const kda = (kills + assists) / deaths;
+        let kda;
+        if (deaths === 0) {
+          kda = (kills + assists) / (deaths + 1);
+        } else {
+          kda = (kills + assists) / deaths;
+        }
+
         averageKda += kda;
         averageKills += kills;
         averageDeaths += deaths;
         averageAssists += assists;
+
         kdaCollection.push(kda);
         assistsCollection.push(assists);
         killsCollection.push(kills);
@@ -368,7 +383,19 @@ export default {
         averageVisionWardsBoughtInGame += visionWardsBoughtInGame;
       }
       function getMultiKills(individualGame) {
+        const { doubleKills } = individualGame[0].individualStats.stats;
+        const { tripleKills } = individualGame[0].individualStats.stats;
+        const { quadraKills } = individualGame[0].individualStats.stats;
+        const { pentaKills } = individualGame[0].individualStats.stats;
+        averageDoubleKill += doubleKills;
+        averageTripleKill += tripleKills;
+        averageQuadraKill += quadraKills;
+        averagePentaKill += pentaKills;
 
+        doubleKillCollection.push(doubleKills);
+        tripleKillCollection.push(tripleKills);
+        quadraKillCollection.push(quadraKills);
+        pentaKillCollection.push(pentaKills);
       }
 
       for (const game of this.propsData) {
@@ -378,6 +405,7 @@ export default {
         amountOfGames += 1;
         gameLabels.push((`game ${amountOfGames}( ${game[0].championName})`));
         getVisionScore(game);
+        getMultiKills(game);
       }
       this.kdaData.averageDeaths = (averageDeaths / this.propsData.length).toFixed(1);
       this.kdaData.averageDeaths = (averageDeaths / this.propsData.length).toFixed(1);
@@ -395,6 +423,14 @@ export default {
       this.kdaData.averageVisionWardsBoughtInGame = (averageVisionWardsBoughtInGame / this.propsData.length).toFixed(1);
       this.kdaData.averageVisionScorePerMinute = (visionScorePerMinute / this.propsData.length).toFixed(1);
       this.kdaData.championToxicityScore = championToxicityScore;
+      this.kdaData.averageDoubleKill = (averageDoubleKill / this.propsData.length).toFixed(1);
+      this.kdaData.averageTripleKill = (averageTripleKill / this.propsData.length).toFixed(1);
+      this.kdaData.averageQuadraKill = (averageQuadraKill / this.propsData.length).toFixed(1);
+      this.kdaData.averagePentaKill = (averagePentaKill / this.propsData.length).toFixed(1);
+      this.kdaData.doubleKillCollection = doubleKillCollection;
+      this.kdaData.tripleKillCollection = tripleKillCollection;
+      this.kdaData.quadraKillCollection = quadraKillCollection;
+      this.kdaData.pentaKillCollection = pentaKillCollection;
       console.log(this.kdaData);
     },
   },
