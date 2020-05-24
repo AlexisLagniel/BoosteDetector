@@ -62,7 +62,6 @@ export default {
     },
   },
   mounted() {
-    this.getChampionToxicity('Ilaoi');
   },
   props: {
     propsData: Array,
@@ -81,6 +80,7 @@ export default {
       globalWinRateCollection: null,
       kdaTrackingCollection: null,
       visionCollection: null,
+      multiKillsCollection: null,
       toxicChampions: [{
         tier: 1,
         list: ['Evelynn', 'Ilaoi', 'Master Yi', 'Mordekaiser', 'Senna', 'Sylas', 'Talon'],
@@ -128,6 +128,7 @@ export default {
           that.kdaTrackingCollection.datasets[1].data.push(that.kdaData.deathsTracking[i]);
           that.kdaTrackingCollection.datasets[2].data.push(that.kdaData.assistsTracking[i]);
           that.kdaTrackingCollection.datasets[3].data.push(that.kdaData.kdaTracking[i]);
+          that.kdaTrackingCollection.datasets[4].data.push(that.kdaData.farmCollection[i]);
         }
       }
       this.winRateCollection = {
@@ -198,13 +199,19 @@ export default {
           {
             label: ['Assists'],
             fill: false,
-            borderColor: '#ffed52',
+            borderColor: '#ff99ff',
             data: [],
           },
           {
             label: ['Kda'],
             fill: false,
             borderColor: '#35E7E7',
+            data: [],
+          },
+          {
+            label: ['Creeps per minute'],
+            fill: false,
+            borderColor: '#ffff66',
             data: [],
           },
         ],
@@ -219,7 +226,6 @@ export default {
           },
         ],
       };
-
       fullFillTrackingDataLabels();
     },
     async getWinRate() {
@@ -344,11 +350,15 @@ export default {
       const doubleKillCollection = [];
       const tripleKillCollection = [];
       const quadraKillCollection = [];
+      const farmCollection = [];
+      let averageFarm = 0;
       const pentaKillCollection = [];
       let averageDoubleKill = 0;
       let averageTripleKill = 0;
       let averageQuadraKill = 0;
       let averagePentaKill = 0;
+      const csDiffDeltaCollection = [];
+      const averageDiffDeltaCollection = 0;
       function getKda(individualGame) {
         const { kills } = individualGame[0].individualStats.stats;
         const { deaths } = individualGame[0].individualStats.stats;
@@ -376,11 +386,16 @@ export default {
         const { visionScore } = individualGame[0].individualStats.stats;
         const { wardsPlaced } = individualGame[0].individualStats.stats;
         const { visionWardsBoughtInGame } = individualGame[0].individualStats.stats;
+        const { totalMinionsKilled } = individualGame[0].individualStats.stats;
+
         averageVisionScore += visionScore;
         averageGameDuration += gameDuration;
         averageWardsPlaced += wardsPlaced;
+
+        averageFarm += (totalMinionsKilled / (gameDuration / 60));
         visionScorePerMinute += (visionScore / (gameDuration / 60));
         averageVisionWardsBoughtInGame += visionWardsBoughtInGame;
+        farmCollection.push((totalMinionsKilled / (gameDuration / 60)).toFixed(1));
       }
       function getMultiKills(individualGame) {
         const { doubleKills } = individualGame[0].individualStats.stats;
@@ -397,6 +412,14 @@ export default {
         quadraKillCollection.push(quadraKills);
         pentaKillCollection.push(pentaKills);
       }
+      function getCsDelta(individualGame) {
+        const { creepsPerMinDeltas } = individualGame[0].individualStats.timeline;
+        console.log(creepsPerMinDeltas);
+        console.log('mlo');
+        // for (const period of creepsPerMinDeltas) {
+        //   console.log(period);
+        // }
+      }
 
       for (const game of this.propsData) {
         getKda(game);
@@ -406,6 +429,7 @@ export default {
         gameLabels.push((`game ${amountOfGames}( ${game[0].championName})`));
         getVisionScore(game);
         getMultiKills(game);
+        getCsDelta(game);
       }
       this.kdaData.averageDeaths = (averageDeaths / this.propsData.length).toFixed(1);
       this.kdaData.averageDeaths = (averageDeaths / this.propsData.length).toFixed(1);
@@ -431,6 +455,8 @@ export default {
       this.kdaData.tripleKillCollection = tripleKillCollection;
       this.kdaData.quadraKillCollection = quadraKillCollection;
       this.kdaData.pentaKillCollection = pentaKillCollection;
+      this.kdaData.farmCollection = farmCollection;
+      this.kdaData.averageFarm = (averageFarm / this.propsData.length).toFixed(1);
       console.log(this.kdaData);
     },
   },
