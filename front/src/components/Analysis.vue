@@ -361,7 +361,7 @@ export default {
       const averagegoldDiffDeltaAt20 = [];
       const averagegoldDiffDeltaAt30 = [];
       const averagegoldDiffDeltaAfter30 = [];
-      const amountOfFractionsCsDiff = {};
+      const promise1 = 0;
       function getKda(individualGame) {
         const { kills } = individualGame[0].individualStats.stats;
         const { deaths } = individualGame[0].individualStats.stats;
@@ -410,6 +410,13 @@ export default {
         quadraKillCollection.push(quadraKills);
         pentaKillCollection.push(pentaKills);
       }
+      function getAverageGoldDeltas(period) {
+        let accumuler = 0;
+        for (const gold of period) {
+          accumuler += gold;
+        }
+        return accumuler;
+      }
       function getGoldDelta(individualGame) {
         const { goldPerMinDeltas } = individualGame[0].individualStats.timeline;
         for (const [period, value] of Object.entries(goldPerMinDeltas)) {
@@ -430,24 +437,15 @@ export default {
               console.log('error');
           }
         }
-      }
-      function getAverageGoldDeltas(period) {
-        let accumuler = 5;
-        console.log(period);
-        console.log(period.length);
-        for (const gold of period) {
-          console.log(gold);
-          console.log('gold');
-          accumuler += gold;
-        }
-        return accumuler;
+        setTimeout(() => {
+          console.log(getAverageGoldDeltas(averagegoldDiffDeltAt10));
+        }, 500);
       }
       console.log(getAverageGoldDeltas(averagegoldDiffDeltAt10));
       // console.log(averagegoldDiffDeltAt10);
       // console.log(averagegoldDiffDeltaAt20);
       // console.log(averagegoldDiffDeltaAt30);
       // console.log(averagegoldDiffDeltaAfter30);
-      console.log('lol');
 
       for (const game of this.propsData) {
         getKda(game);
