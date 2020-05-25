@@ -73,7 +73,6 @@ export default {
       totalAmountOfGames: 0,
       roleVariety: [],
       roleVarietyCollection: null,
-      dataCollection: null,
       winRateCollection: null,
       amountOfToxicChampsCollection: null,
       averageKdaCollection: null,
@@ -108,7 +107,6 @@ export default {
         // },
       },
       kdaData: {},
-      averageKda: 0,
     };
   },
   methods: {
@@ -330,7 +328,7 @@ export default {
       });
       this.roleVariety = roleVarietyArray;
     },
-    singleGameAnalysis() {
+    async singleGameAnalysis() {
       let averageKda = 0;
       let averageKills = 0;
       let averageDeaths = 0;
@@ -352,13 +350,18 @@ export default {
       const quadraKillCollection = [];
       const farmCollection = [];
       let averageFarm = 0;
+      let averageFarmPerminute = 0;
       const pentaKillCollection = [];
       let averageDoubleKill = 0;
       let averageTripleKill = 0;
       let averageQuadraKill = 0;
       let averagePentaKill = 0;
-      const csDiffDeltaCollection = [];
-      const averageDiffDeltaCollection = 0;
+      const averagegoldDiffDelta = {};
+      const averagegoldDiffDeltAt10 = {};
+      const averagegoldDiffDeltaAt20 = {};
+      const averagegoldDiffDeltaAt30 = {};
+      const averagegoldDiffDeltaAfter30 = {};
+      const amountOfFractionsCsDiff = {};
       function getKda(individualGame) {
         const { kills } = individualGame[0].individualStats.stats;
         const { deaths } = individualGame[0].individualStats.stats;
@@ -392,7 +395,8 @@ export default {
         averageGameDuration += gameDuration;
         averageWardsPlaced += wardsPlaced;
 
-        averageFarm += (totalMinionsKilled / (gameDuration / 60));
+        averageFarm += totalMinionsKilled;
+        averageFarmPerminute += (totalMinionsKilled / (gameDuration / 60));
         visionScorePerMinute += (visionScore / (gameDuration / 60));
         averageVisionWardsBoughtInGame += visionWardsBoughtInGame;
         farmCollection.push((totalMinionsKilled / (gameDuration / 60)).toFixed(1));
@@ -413,14 +417,31 @@ export default {
         pentaKillCollection.push(pentaKills);
       }
       function getCsDelta(individualGame) {
-        const { creepsPerMinDeltas } = individualGame[0].individualStats.timeline;
-        console.log(creepsPerMinDeltas);
-        console.log('mlo');
-        // for (const period of creepsPerMinDeltas) {
-        //   console.log(period);
-        // }
+        const { goldPerMinDeltas } = individualGame[0].individualStats.timeline;
+        if (goldPerMinDeltas) {
+          for (const [period, value] of Object.entries(goldPerMinDeltas)) {
+            switch (period) {
+              case '0-10':
+                console.log(value);
+                averagegoldDiffDeltAt10.value += value;
+                averagegoldDiffDeltAt10.frequency += 1;
+                console.log(averagegoldDiffDeltAt10);
+                break;
+              case '10-20':
+              // console.log(2);
+                break;
+              case '20-30':
+              // console.log(3);
+                break;
+              case '30-end':
+              // console.log(4);
+                break;
+              default:
+                console.log('error');
+            }
+          }
+        }
       }
-
       for (const game of this.propsData) {
         getKda(game);
         const champion = this.getChampionToxicity(game[0].championName);
@@ -429,7 +450,7 @@ export default {
         gameLabels.push((`game ${amountOfGames}( ${game[0].championName})`));
         getVisionScore(game);
         getMultiKills(game);
-        getCsDelta(game);
+        await new Promise(resolve => setTimeout(resolve, getCsDelta(game)));
       }
       this.kdaData.averageDeaths = (averageDeaths / this.propsData.length).toFixed(1);
       this.kdaData.averageDeaths = (averageDeaths / this.propsData.length).toFixed(1);
@@ -457,6 +478,7 @@ export default {
       this.kdaData.pentaKillCollection = pentaKillCollection;
       this.kdaData.farmCollection = farmCollection;
       this.kdaData.averageFarm = (averageFarm / this.propsData.length).toFixed(1);
+      this.kdaData.averageFarmPerMinute = ((averageFarm / this.propsData.length) / ((averageGameDuration / 60) / this.propsData.length)).toFixed(1);
       console.log(this.kdaData);
     },
   },
