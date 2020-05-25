@@ -357,10 +357,10 @@ export default {
       let averageQuadraKill = 0;
       let averagePentaKill = 0;
       const averagegoldDiffDelta = {};
-      const averagegoldDiffDeltAt10 = {};
-      const averagegoldDiffDeltaAt20 = {};
-      const averagegoldDiffDeltaAt30 = {};
-      const averagegoldDiffDeltaAfter30 = {};
+      const averagegoldDiffDeltAt10 = [];
+      const averagegoldDiffDeltaAt20 = [];
+      const averagegoldDiffDeltaAt30 = [];
+      const averagegoldDiffDeltaAfter30 = [];
       const amountOfFractionsCsDiff = {};
       function getKda(individualGame) {
         const { kills } = individualGame[0].individualStats.stats;
@@ -410,32 +410,45 @@ export default {
         quadraKillCollection.push(quadraKills);
         pentaKillCollection.push(pentaKills);
       }
-      function getCsDelta(individualGame) {
+      function getGoldDelta(individualGame) {
         const { goldPerMinDeltas } = individualGame[0].individualStats.timeline;
-        if (goldPerMinDeltas) {
-          for (const [period, value] of Object.entries(goldPerMinDeltas)) {
-            switch (period) {
-              case '0-10':
-                console.log(value);
-                averagegoldDiffDeltAt10.value += value;
-                averagegoldDiffDeltAt10.frequency += 1;
-                console.log(averagegoldDiffDeltAt10);
-                break;
-              case '10-20':
-              // console.log(2);
-                break;
-              case '20-30':
-              // console.log(3);
-                break;
-              case '30-end':
-              // console.log(4);
-                break;
-              default:
-                console.log('error');
-            }
+        for (const [period, value] of Object.entries(goldPerMinDeltas)) {
+          switch (period) {
+            case '0-10':
+              averagegoldDiffDeltAt10.push(value);
+              break;
+            case '10-20':
+              averagegoldDiffDeltaAt20.push(value);
+              break;
+            case '20-30':
+              averagegoldDiffDeltaAt30.push(value);
+              break;
+            case '30-end':
+              averagegoldDiffDeltaAfter30.push(value);
+              break;
+            default:
+              console.log('error');
           }
         }
       }
+      function getAverageGoldDeltas(period) {
+        let accumuler = 5;
+        console.log(period);
+        console.log(period.length);
+        for (const gold of period) {
+          console.log(gold);
+          console.log('gold');
+          accumuler += gold;
+        }
+        return accumuler;
+      }
+      console.log(getAverageGoldDeltas(averagegoldDiffDeltAt10));
+      // console.log(averagegoldDiffDeltAt10);
+      // console.log(averagegoldDiffDeltaAt20);
+      // console.log(averagegoldDiffDeltaAt30);
+      // console.log(averagegoldDiffDeltaAfter30);
+      console.log('lol');
+
       for (const game of this.propsData) {
         getKda(game);
         const champion = this.getChampionToxicity(game[0].championName);
@@ -444,7 +457,7 @@ export default {
         gameLabels.push((`game ${amountOfGames}( ${game[0].championName})`));
         getVisionScore(game);
         getMultiKills(game);
-        getCsDelta(game);
+        getGoldDelta(game);
       }
       this.kdaData.averageDeaths = (averageDeaths / this.propsData.length).toFixed(1);
       this.kdaData.averageDeaths = (averageDeaths / this.propsData.length).toFixed(1);
