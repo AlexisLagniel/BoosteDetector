@@ -328,7 +328,7 @@ export default {
       });
       this.roleVariety = roleVarietyArray;
     },
-    async singleGameAnalysis() {
+    singleGameAnalysis() {
       let averageKda = 0;
       let averageKills = 0;
       let averageDeaths = 0;
@@ -372,29 +372,24 @@ export default {
         } else {
           kda = (kills + assists) / deaths;
         }
-
         averageKda += kda;
         averageKills += kills;
         averageDeaths += deaths;
         averageAssists += assists;
-
         kdaCollection.push(kda);
         assistsCollection.push(assists);
         killsCollection.push(kills);
         deathsCollection.push(deaths);
       }
-
       function getVisionScore(individualGame) {
         const { gameDuration } = individualGame[0];
         const { visionScore } = individualGame[0].individualStats.stats;
         const { wardsPlaced } = individualGame[0].individualStats.stats;
         const { visionWardsBoughtInGame } = individualGame[0].individualStats.stats;
         const { totalMinionsKilled } = individualGame[0].individualStats.stats;
-
         averageVisionScore += visionScore;
         averageGameDuration += gameDuration;
         averageWardsPlaced += wardsPlaced;
-
         averageFarm += totalMinionsKilled;
         averageFarmPerminute += (totalMinionsKilled / (gameDuration / 60));
         visionScorePerMinute += (visionScore / (gameDuration / 60));
@@ -410,7 +405,6 @@ export default {
         averageTripleKill += tripleKills;
         averageQuadraKill += quadraKills;
         averagePentaKill += pentaKills;
-
         doubleKillCollection.push(doubleKills);
         tripleKillCollection.push(tripleKills);
         quadraKillCollection.push(quadraKills);
@@ -450,7 +444,7 @@ export default {
         gameLabels.push((`game ${amountOfGames}( ${game[0].championName})`));
         getVisionScore(game);
         getMultiKills(game);
-        await new Promise(resolve => setTimeout(resolve, getCsDelta(game)));
+        getCsDelta(game);
       }
       this.kdaData.averageDeaths = (averageDeaths / this.propsData.length).toFixed(1);
       this.kdaData.averageDeaths = (averageDeaths / this.propsData.length).toFixed(1);
