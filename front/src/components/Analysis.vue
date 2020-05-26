@@ -357,11 +357,10 @@ export default {
       let averageQuadraKill = 0;
       let averagePentaKill = 0;
       const averagegoldDiffDelta = {};
-      const averagegoldDiffDeltAt10 = [];
+      const averagegoldDiffDeltaAt10 = [];
       const averagegoldDiffDeltaAt20 = [];
       const averagegoldDiffDeltaAt30 = [];
       const averagegoldDiffDeltaAfter30 = [];
-      const promise1 = 0;
       function getKda(individualGame) {
         const { kills } = individualGame[0].individualStats.stats;
         const { deaths } = individualGame[0].individualStats.stats;
@@ -422,7 +421,7 @@ export default {
         for (const [period, value] of Object.entries(goldPerMinDeltas)) {
           switch (period) {
             case '0-10':
-              averagegoldDiffDeltAt10.push(value);
+              averagegoldDiffDeltaAt10.push(value);
               break;
             case '10-20':
               averagegoldDiffDeltaAt20.push(value);
@@ -438,14 +437,14 @@ export default {
           }
         }
         setTimeout(() => {
-          console.log(getAverageGoldDeltas(averagegoldDiffDeltAt10));
+          averagegoldDiffDelta.phase1 = getAverageGoldDeltas(averagegoldDiffDeltaAt10);
+          averagegoldDiffDelta.phase2 = getAverageGoldDeltas(averagegoldDiffDeltaAt20);
+          averagegoldDiffDelta.phase3 = getAverageGoldDeltas(averagegoldDiffDeltaAt30);
+          averagegoldDiffDelta.phase4 = getAverageGoldDeltas(averagegoldDiffDeltaAt10);
+          console.log(averagegoldDiffDelta);
         }, 500);
       }
-      console.log(getAverageGoldDeltas(averagegoldDiffDeltAt10));
-      // console.log(averagegoldDiffDeltAt10);
-      // console.log(averagegoldDiffDeltaAt20);
-      // console.log(averagegoldDiffDeltaAt30);
-      // console.log(averagegoldDiffDeltaAfter30);
+
 
       for (const game of this.propsData) {
         getKda(game);
@@ -484,6 +483,11 @@ export default {
       this.kdaData.farmCollection = farmCollection;
       this.kdaData.averageFarm = (averageFarm / this.propsData.length).toFixed(1);
       this.kdaData.averageFarmPerMinute = ((averageFarm / this.propsData.length) / ((averageGameDuration / 60) / this.propsData.length)).toFixed(1);
+      this.kdaData.averageGoldDiffAt10 = (averagegoldDiffDelta.phase1);
+      console.log(this.kdaData.averageGoldDiffAt10);
+      this.kdaData.averageGoldDiffAt20 = (averagegoldDiffDelta.phase2 / averagegoldDiffDeltaAt20.length);
+      this.kdaData.averageGoldDiffAt30 = (averagegoldDiffDelta.phase3 / averagegoldDiffDeltaAt30.length);
+      this.kdaData.averageGoldDiffAfter30 = (averagegoldDiffDelta.phase4 / averagegoldDiffDeltaAfter30.length);
       console.log(this.kdaData);
     },
   },
