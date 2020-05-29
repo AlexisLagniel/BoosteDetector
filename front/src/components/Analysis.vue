@@ -2,37 +2,37 @@
     <div>
       <div class="stat-line">
         <div class="individualGraph">
-          <bar-chart v-if="roleVarietyCollection" :chartData="roleVarietyCollection" :options="options"></bar-chart>
+          <bar-chart v-if="dataLoaded" :chartData="roleVarietyCollection" :options="options"></bar-chart>
         </div>
         <div class="individualGraph">
-          <doughnut v-if="winRate" :chartData="winRateCollection" :options="options"></doughnut>
-        </div>
-      </div>
-      <div class="stat-line">
-        <div class="individualGraph">
-          <doughnut v-if="amountOfToxicChampsCollection" :chartData="amountOfToxicChampsCollection" :options="options"></doughnut>
-        </div>
-        <div class="individualGraph">
-          <doughnut v-if="globalWinRateCollection" :chartData="globalWinRateCollection" :options="options"></doughnut>
+          <doughnut v-if="dataLoaded" :chartData="winRateCollection" :options="options"></doughnut>
         </div>
       </div>
       <div class="stat-line">
         <div class="individualGraph">
-          <bar-chart v-if="averageKdaCollection" :chartData="averageKdaCollection" :options="options"></bar-chart>
+          <doughnut v-if="dataLoaded" :chartData="amountOfToxicChampsCollection" :options="options"></doughnut>
         </div>
         <div class="individualGraph">
-          <bar-chart v-if="averageGoldDeltaCollection" :chartData="averageGoldDeltaCollection" :options="options"></bar-chart>
+          <doughnut v-if="dataLoaded" :chartData="globalWinRateCollection" :options="options"></doughnut>
+        </div>
+      </div>
+      <div class="stat-line">
+        <div class="individualGraph">
+          <bar-chart v-if="dataLoaded" :chartData="averageKdaCollection" :options="options"></bar-chart>
+        </div>
+        <div class="individualGraph">
+          <bar-chart v-if="dataLoaded" :chartData="averageGoldDeltaCollection" :options="options"></bar-chart>
         </div>
       </div>
       <div class="stat-line">
         <div class="individualGraph">
           <div>
-            <line-chart v-if="kdaTrackingCollection" :chartData="kdaTrackingCollection" :options="options"></line-chart>
+            <line-chart v-if="dataLoaded" :chartData="kdaTrackingCollection" :options="options"></line-chart>
           </div>
         </div>
         <div class="individualGraph">
           <div>
-            <radar-chart v-if="visionCollection" :chartData="visionCollection" :options="options"></radar-chart>
+            <radar-chart v-if="dataLoaded" :chartData="visionCollection" :options="options"></radar-chart>
           </div>
         </div>
       </div>
@@ -63,6 +63,10 @@ export default {
       this.calculatePlayerChampionPool();
       this.singleGameAnalysis();
     },
+    dataLoaded() {
+      this.fillData();
+      this.generateBoostingScore();
+    },
   },
   mounted() {
   },
@@ -71,6 +75,7 @@ export default {
   },
   data() {
     return {
+      dataLoaded: false,
       winRate: 0,
       globalWinRate: 0,
       totalAmountOfGames: 0,
@@ -84,6 +89,7 @@ export default {
       kdaTrackingCollection: null,
       visionCollection: null,
       multiKillsCollection: null,
+      boostedScores: {},
       toxicChampions: [{
         tier: 1,
         list: ['Evelynn', 'Ilaoi', 'Master Yi', 'Mordekaiser', 'Senna', 'Sylas', 'Talon'],
@@ -97,6 +103,7 @@ export default {
         list: ['Irelia', 'Katarina', 'Qiyanna', 'Rengar', 'Shyvana', 'Yasuo', 'Yummi', 'Zoe'],
       }],
       mainChampion: null,
+      mainChampionToxicity: null,
       toxicChampsPlayed: [],
       amountOfToxicChamps: 0,
       options: {
@@ -232,9 +239,9 @@ export default {
         labels: ['At 10', 'At 20', 'At 30', 'After 30'],
         datasets: [
           {
-            label: ['Average gold difference'],
+            label: ['Average gold per minute'],
             backgroundColor: '#b3ffd9',
-            data: [this.kdaData.averageGoldDiffAt10, this.kdaData.averageGoldDiffAt20, this.kdaData.averageGoldDiffAt30, this.kdaData.averageGoldDiffAfter30],
+            data: [this.kdaData.averageGoldAt10, this.kdaData.averageGoldAt20, this.kdaData.averageGoldAt30, this.kdaData.averageGoldAfter30],
           },
         ],
       };
@@ -291,6 +298,8 @@ export default {
       }
       if (playedChampionsList.length === this.propsData.length) {
         this.mainChampion = findMainChamp(playedChampionsList);
+        this.mainChampionToxicity = this.getChampionToxicity(this.mainChampion);
+        console.log(this.mainChampionToxicity);
       }
       this.amountOfToxicChamps = amountOfToxicChamps;
       this.toxicChampsPlayed = toxicChampsPlayed;
@@ -372,11 +381,10 @@ export default {
       let averageTripleKill = 0;
       let averageQuadraKill = 0;
       let averagePentaKill = 0;
-      const averagegoldDiffDelta = {};
-      const averagegoldDiffDeltaAt10 = [];
-      const averagegoldDiffDeltaAt20 = [];
-      const averagegoldDiffDeltaAt30 = [];
-      const averagegoldDiffDeltaAfter30 = [];
+      const averagegoldDeltaAt10 = [];
+      const averagegoldDeltaAt20 = [];
+      const averagegoldDeltaAt30 = [];
+      const averagegoldDeltaAfter30 = [];
       function getKda(individualGame) {
         const { kills } = individualGame[0].individualStats.stats;
         const { deaths } = individualGame[0].individualStats.stats;
@@ -437,29 +445,28 @@ export default {
         for (const [period, value] of Object.entries(goldPerMinDeltas)) {
           switch (period) {
             case '0-10':
-              averagegoldDiffDeltaAt10.push(value);
+              averagegoldDeltaAt10.push(value);
               break;
             case '10-20':
-              averagegoldDiffDeltaAt20.push(value);
+              averagegoldDeltaAt20.push(value);
               break;
             case '20-30':
-              averagegoldDiffDeltaAt30.push(value);
+              averagegoldDeltaAt30.push(value);
               break;
             case '30-end':
-              averagegoldDiffDeltaAfter30.push(value);
+              averagegoldDeltaAfter30.push(value);
               break;
             default:
               console.log('error');
           }
         }
         setTimeout(() => {
-          console.log(averagegoldDiffDeltaAt10);
-          that.kdaData.averageGoldDiffAt10 = (getAverageGoldDeltas(averagegoldDiffDeltaAt10) / averagegoldDiffDeltaAt10.length);
-          that.kdaData.averageGoldDiffAt20 = (getAverageGoldDeltas(averagegoldDiffDeltaAt20) / averagegoldDiffDeltaAt20.length);
-          that.kdaData.averageGoldDiffAt30 = (getAverageGoldDeltas(averagegoldDiffDeltaAt30) / averagegoldDiffDeltaAt30.length);
-          that.kdaData.averageGoldDiffAfter30 = (getAverageGoldDeltas(averagegoldDiffDeltaAfter30) / averagegoldDiffDeltaAfter30.length);
-          console.log(averagegoldDiffDelta);
-        }, 500);
+          that.kdaData.averageGoldAt10 = (getAverageGoldDeltas(averagegoldDeltaAt10) / averagegoldDeltaAt10.length).toFixed(0);
+          that.kdaData.averageGoldAt20 = (getAverageGoldDeltas(averagegoldDeltaAt20) / averagegoldDeltaAt20.length).toFixed(0);
+          that.kdaData.averageGoldAt30 = (getAverageGoldDeltas(averagegoldDeltaAt30) / averagegoldDeltaAt30.length).toFixed(0);
+          that.kdaData.averageGoldAfter30 = (getAverageGoldDeltas(averagegoldDeltaAfter30) / averagegoldDeltaAfter30.length).toFixed(0);
+          that.dataLoaded = true;
+        }, 50);
       }
 
 
@@ -501,6 +508,15 @@ export default {
       this.kdaData.averageFarm = (averageFarm / this.propsData.length).toFixed(1);
       this.kdaData.averageFarmPerMinute = ((averageFarm / this.propsData.length) / ((averageGameDuration / 60) / this.propsData.length)).toFixed(1);
       console.log(this.kdaData);
+    },
+    generateBoostingScore() {
+      const that = this;
+      function mainChampToxicityScore(toxicityScore) {
+        const score = (toxicityScore / that.propsData.length);
+        console.log(score);
+      }
+
+      mainChampToxicityScore(this.mainChampionToxicity);
     },
   },
 };
