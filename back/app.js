@@ -25,6 +25,23 @@ app.get('/profile', cors(), function (req, res, next) {
 		});
 });
 
+app.get('/profileByName', cors(), function (req, res, next) {
+	const region = req.query.region;
+	const name = req.query.name;
+	const url = 'https://' + region + '.api.riotgames.com/lol/summoner/v4/summoners/by-name/' + encodeURIComponent(name);
+	const headers = {
+		"X-Riot-Token": token,
+	};
+	axios.get(url, { headers })
+		.then((resp) => {
+			return res.status(200).send(resp.data);
+		})
+		.catch((err) => {
+			console.warn(err);
+			return res.status(500).send();
+		});
+});
+
 app.get('/profileinfos', cors(), function (req, res, next) {
 	const region = req.query.region;
 	const query = req.query.query;

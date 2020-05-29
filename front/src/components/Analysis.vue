@@ -438,6 +438,7 @@ export default {
           }
         }
         setTimeout(() => {
+          console.log(averagegoldDiffDeltaAt10);
           that.kdaData.averageGoldDiffAt10 = (getAverageGoldDeltas(averagegoldDiffDeltaAt10) / averagegoldDiffDeltaAt10.length);
           that.kdaData.averageGoldDiffAt20 = (getAverageGoldDeltas(averagegoldDiffDeltaAt20) / averagegoldDiffDeltaAt20.length);
           that.kdaData.averageGoldDiffAt30 = (getAverageGoldDeltas(averagegoldDiffDeltaAt30) / averagegoldDiffDeltaAt30.length);
