@@ -329,6 +329,7 @@ export default {
       this.roleVariety = roleVarietyArray;
     },
     singleGameAnalysis() {
+      const that = this;
       let averageKda = 0;
       let averageKills = 0;
       let averageDeaths = 0;
@@ -437,10 +438,10 @@ export default {
           }
         }
         setTimeout(() => {
-          averagegoldDiffDelta.phase1 = getAverageGoldDeltas(averagegoldDiffDeltaAt10);
-          averagegoldDiffDelta.phase2 = getAverageGoldDeltas(averagegoldDiffDeltaAt20);
-          averagegoldDiffDelta.phase3 = getAverageGoldDeltas(averagegoldDiffDeltaAt30);
-          averagegoldDiffDelta.phase4 = getAverageGoldDeltas(averagegoldDiffDeltaAt10);
+          that.kdaData.averageGoldDiffAt10 = (getAverageGoldDeltas(averagegoldDiffDeltaAt10) / averagegoldDiffDeltaAt10.length);
+          that.kdaData.averageGoldDiffAt20 = (getAverageGoldDeltas(averagegoldDiffDeltaAt20) / averagegoldDiffDeltaAt20.length);
+          that.kdaData.averageGoldDiffAt30 = (getAverageGoldDeltas(averagegoldDiffDeltaAt30) / averagegoldDiffDeltaAt30.length);
+          that.kdaData.averageGoldDiffAfter30 = (getAverageGoldDeltas(averagegoldDiffDeltaAfter30) / averagegoldDiffDeltaAfter30.length);
           console.log(averagegoldDiffDelta);
         }, 500);
       }
@@ -483,11 +484,6 @@ export default {
       this.kdaData.farmCollection = farmCollection;
       this.kdaData.averageFarm = (averageFarm / this.propsData.length).toFixed(1);
       this.kdaData.averageFarmPerMinute = ((averageFarm / this.propsData.length) / ((averageGameDuration / 60) / this.propsData.length)).toFixed(1);
-      this.kdaData.averageGoldDiffAt10 = (averagegoldDiffDelta.phase1);
-      console.log(this.kdaData.averageGoldDiffAt10);
-      this.kdaData.averageGoldDiffAt20 = (averagegoldDiffDelta.phase2 / averagegoldDiffDeltaAt20.length);
-      this.kdaData.averageGoldDiffAt30 = (averagegoldDiffDelta.phase3 / averagegoldDiffDeltaAt30.length);
-      this.kdaData.averageGoldDiffAfter30 = (averagegoldDiffDelta.phase4 / averagegoldDiffDeltaAfter30.length);
       console.log(this.kdaData);
     },
   },
