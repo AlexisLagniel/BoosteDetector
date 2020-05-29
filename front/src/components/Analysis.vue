@@ -20,6 +20,9 @@
         <div class="individualGraph">
           <bar-chart v-if="averageKdaCollection" :chartData="averageKdaCollection" :options="options"></bar-chart>
         </div>
+        <div class="individualGraph">
+          <bar-chart v-if="averageGoldDeltaCollection" :chartData="averageGoldDeltaCollection" :options="options"></bar-chart>
+        </div>
       </div>
       <div class="stat-line">
         <div class="individualGraph">
@@ -76,6 +79,7 @@ export default {
       winRateCollection: null,
       amountOfToxicChampsCollection: null,
       averageKdaCollection: null,
+      averageGoldDeltaCollection: null,
       globalWinRateCollection: null,
       kdaTrackingCollection: null,
       visionCollection: null,
@@ -224,6 +228,17 @@ export default {
           },
         ],
       };
+      this.averageGoldDeltaCollection = {
+        labels: ['At 10', 'At 20', 'At 30', 'After 30'],
+        datasets: [
+          {
+            label: ['Average gold difference'],
+            backgroundColor: '#b3ffd9',
+            data: [this.kdaData.averageGoldDiffAt10, this.kdaData.averageGoldDiffAt20, this.kdaData.averageGoldDiffAt30, this.kdaData.averageGoldDiffAfter30],
+          },
+        ],
+      };
+
       fullFillTrackingDataLabels();
     },
     async getWinRate() {
