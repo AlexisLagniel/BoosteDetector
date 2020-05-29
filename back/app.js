@@ -42,6 +42,23 @@ app.get('/profileByName', cors(), function (req, res, next) {
 		});
 });
 
+app.get('/profileByEncryptedSummonerName', cors(), function (req, res, next) {
+	const region = req.query.region;
+	const encryptedSummonerName = req.query.encryptedSummonerName;
+	const url = 'https://' + region + '.api.riotgames.com/lol/league/v4/entries/by-summoner/' + encodeURIComponent(encryptedSummonerName);
+	const headers = {
+		"X-Riot-Token": token,
+	};
+	axios.get(url, { headers })
+		.then((resp) => {
+			return res.status(200).send(resp.data);
+		})
+		.catch((err) => {
+			console.warn(err);
+			return res.status(500).send();
+		});
+});
+
 app.get('/profileinfos', cors(), function (req, res, next) {
 	const region = req.query.region;
 	const query = req.query.query;

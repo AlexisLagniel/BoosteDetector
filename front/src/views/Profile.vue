@@ -66,7 +66,7 @@ export default {
     },
     queryProfileInfoBySummonerId() {
       axios.get(
-        `${this.backrefs}/profileInfos?region=euw1&query=%2Flol%2Fleague%2Fv4%2Fentries%2Fby-summoner%2F${this.encryptedSummonerId}`,
+        `${this.backrefs}/profileByEncryptedSummonerName?region=euw1&encryptedSummonerName=${encodeURIComponent(decodeURIComponent(this.encryptedSummonerId))}`,
       ).then((response) => {
         this.summonerProfileInfo = response.data;
         console.log(this.summonerProfileInfo);

@@ -35,7 +35,7 @@ export default {
     async queryInfoByUsername() {
       // getting the infos for a given summoner name
       await axios.get(
-        `${this.backrefs}/profile?region=euw1&query=%2Flol%2Fsummoner%2Fv4%2Fsummoners%2Fby-name%2F${this.username}`,
+        `${this.backrefs}/profileByName?region=euw1&name=${encodeURIComponent(decodeURIComponent(this.username))}`,
       ).then((response) => {
         this.encryptedSummonerId = response.data.id;
         this.accountId = response.data.accountId;
