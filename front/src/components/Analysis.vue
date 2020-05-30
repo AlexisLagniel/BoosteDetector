@@ -299,7 +299,6 @@ export default {
       if (playedChampionsList.length === this.propsData.length) {
         this.mainChampion = findMainChamp(playedChampionsList);
         this.mainChampionToxicity = this.getChampionToxicity(this.mainChampion);
-        console.log(this.mainChampionToxicity);
       }
       this.amountOfToxicChamps = amountOfToxicChamps;
       this.toxicChampsPlayed = toxicChampsPlayed;
@@ -511,12 +510,188 @@ export default {
     },
     generateBoostingScore() {
       const that = this;
-      function mainChampToxicityScore(toxicityScore) {
-        const score = (toxicityScore / that.propsData.length);
+      function mainChampToxicityScore() {
+        const mainChampionscore = that.mainChampionToxicity;
+        const averageScore = (that.kdaData.championToxicityScore / that.propsData.length);
+        switch (mainChampionscore) {
+          case 1:
+            that.boostedScores.mainChampionToxicity = 10;
+            break;
+          case 2:
+            that.boostedScores.mainChampionToxicity = 6;
+            break;
+          case 3:
+            that.boostedScores.mainChampionToxicity = 3;
+            break;
+          case 4:
+            that.boostedScores.mainChampionToxicity = 0;
+            break;
+          default:
+        }
+        if (averageScore <= 1.3) {
+          that.boostedScores.averageChampionToxicity = 10;
+        } else if (averageScore > 1.3 && averageScore <= 1.8) {
+          that.boostedScores.averageChampionToxicity = 8;
+        } else if (averageScore > 1.8 && averageScore <= 2.2) {
+          that.boostedScores.averageChampionToxicity = 5;
+        } else if (averageScore > 2.2 && averageScore <= 2.5) {
+          that.boostedScores.averageChampionToxicity = 3;
+        } else if (averageScore > 2.2 && averageScore <= 2.5) {
+          that.boostedScores.averageChampionToxicity = 3;
+        } else if (averageScore > 2.5) {
+          that.boostedScores.averageChampionToxicity = 0;
+        }
+      }
+      function winRateScore() {
+        const { globalWinRate } = that;
+        const currentWinRate = that.winRate;
+        if (globalWinRate <= 40) {
+          that.boostedScores.globalWinRate = 0;
+        } else if (globalWinRate > 40 && globalWinRate <= 43) {
+          that.boostedScores.globalWinRate = 1;
+        } else if (globalWinRate > 43 && globalWinRate <= 45) {
+          that.boostedScores.globalWinRate = 2;
+        } else if (globalWinRate > 45 && globalWinRate <= 47) {
+          that.boostedScores.globalWinRate = 3;
+        } else if (globalWinRate > 47 && globalWinRate <= 49) {
+          that.boostedScores.globalWinRate = 4;
+        } else if (globalWinRate > 49 && globalWinRate <= 50) {
+          that.boostedScores.globalWinRate = 5;
+        } else if (globalWinRate > 49 && globalWinRate <= 50) {
+          that.boostedScores.globalWinRate = 5;
+        } else if (globalWinRate > 50 && globalWinRate <= 52) {
+          that.boostedScores.globalWinRate = 6;
+        } else if (globalWinRate > 52 && globalWinRate <= 54) {
+          that.boostedScores.globalWinRate = 7;
+        } else if (globalWinRate > 54 && globalWinRate <= 57) {
+          that.boostedScores.globalWinRate = 8;
+        } else if (globalWinRate > 57 && globalWinRate <= 60) {
+          that.boostedScores.globalWinRate = 9;
+        } else if (globalWinRate > 60) {
+          that.boostedScores.globalWinRate = 10;
+        }
+
+        if (currentWinRate <= 35) {
+          that.boostedScores.currentWinRate = 0;
+        } else if (currentWinRate > 35 && currentWinRate <= 40) {
+          that.boostedScores.currentWinRate = 1;
+        } else if (currentWinRate > 40 && currentWinRate <= 45) {
+          that.boostedScores.currentWinRate = 3;
+        } else if (currentWinRate > 45 && currentWinRate <= 50) {
+          that.boostedScores.currentWinRate = 5;
+        } else if (currentWinRate > 50 && currentWinRate <= 55) {
+          that.boostedScores.currentWinRate = 7;
+        } else if (currentWinRate > 55 && currentWinRate <= 60) {
+          that.boostedScores.currentWinRate = 9;
+        } else if (currentWinRate > 60) {
+          that.boostedScores.currentWinRate = 10;
+        }
+      }
+      function farmScore() {
+        const averageFarmScore = that.kdaData.averageFarm;
+        const averageFarmPerMinScore = that.kdaData.averageFarmPerMinute;
+
+        if (averageFarmScore < 100) {
+          that.boostedScores.averageFarm = 0;
+        } else if (averageFarmScore > 100 && averageFarmScore <= 120) {
+          that.boostedScores.averageFarm = 2;
+        } else if (averageFarmScore > 120 && averageFarmScore <= 140) {
+          that.boostedScores.averageFarm = 4;
+        } else if (averageFarmScore > 140 && averageFarmScore <= 150) {
+          that.boostedScores.averageFarm = 6;
+        } else if (averageFarmScore > 150 && averageFarmScore <= 170) {
+          that.boostedScores.averageFarm = 8;
+        } else if (averageFarmScore > 170) {
+          that.boostedScores.averageFarm = 10;
+        }
+
+        if (averageFarmPerMinScore < 3) {
+          that.boostedScores.averageFarmPerMinute = 0;
+        } else if (averageFarmPerMinScore > 3 && averageFarmPerMinScore <= 4.5) {
+          that.boostedScores.averageFarmPerMinute = 2;
+        } else if (averageFarmPerMinScore > 4.5 && averageFarmPerMinScore <= 5.5) {
+          that.boostedScores.averageFarmPerMinute = 4;
+        } else if (averageFarmPerMinScore > 5.5 && averageFarmPerMinScore <= 6.5) {
+          that.boostedScores.averageFarmPerMinute = 6;
+        } else if (averageFarmPerMinScore > 6.5 && averageFarmPerMinScore <= 7.5) {
+          that.boostedScores.averageFarmPerMinute = 8;
+        } else if (averageFarmPerMinScore > 7.5) {
+          that.boostedScores.averageFarmPerMinute = 10;
+        }
+      }
+      function gameDurationScore() {
+        const { averageGameDuration } = that.kdaData;
+        if (averageGameDuration > 40) {
+          that.boostedScores.gameDuration = 0;
+        } else if (averageGameDuration < 40 && averageGameDuration >= 35) {
+          that.boostedScores.gameDuration = 1;
+        } else if (averageGameDuration < 35 && averageGameDuration >= 31) {
+          that.boostedScores.gameDuration = 3;
+        } else if (averageGameDuration < 31 && averageGameDuration >= 28) {
+          that.boostedScores.gameDuration = 5;
+        } else if (averageGameDuration < 28 && averageGameDuration >= 26) {
+          that.boostedScores.gameDuration = 7;
+        } else if (averageGameDuration < 26 && averageGameDuration >= 24) {
+          that.boostedScores.gameDuration = 9;
+        } else if (averageGameDuration < 24) {
+          that.boostedScores.gameDuration = 10;
+        }
+      }
+      function averageGoldScore(score, index) {
+        const goldScore = score;
+        let suffix = '';
+        if (index === 1) {
+          suffix = 'goldScoreAt10';
+        } else if (index === 2) {
+          suffix = 'goldScoreAt20';
+        } else if (index === 3) {
+          suffix = 'goldScoreAt30';
+        } else if (index === 4) {
+          suffix = 'goldScoreAfter30';
+        }
+
         console.log(score);
+        console.log('score de farm');
+        if (index === 1) {
+          if (score <= 250) {
+            that.boostedScores[suffix] = 0;
+          } else if (score > 250 && score <= 280) {
+            that.boostedScores[suffix] = 2;
+          } else if (score > 250 && score <= 280) {
+            that.boostedScores[suffix] = 4;
+          } else if (score > 280 && score <= 300) {
+            that.boostedScores[suffix] = 6;
+          } else if (score > 300 && score <= 330) {
+            that.boostedScores[suffix] = 8;
+          } else if (score > 330) {
+            that.boostedScores[suffix] = 10;
+          }
+        } else if (index !== 1) {
+          if (score <= 300) {
+            that.boostedScores[suffix] = 0;
+          } else if (score > 300 && score <= 350) {
+            that.boostedScores[suffix] = 2;
+          } else if (score > 350 && score <= 380) {
+            that.boostedScores[suffix] = 4;
+          } else if (score > 380 && score <= 420) {
+            that.boostedScores[suffix] = 6;
+          } else if (score > 420 && score <= 450) {
+            that.boostedScores[suffix] = 8;
+          } else if (score > 450) {
+            that.boostedScores[suffix] = 10;
+          }
+        }
       }
 
-      mainChampToxicityScore(this.mainChampionToxicity);
+      mainChampToxicityScore();
+      winRateScore();
+      farmScore();
+      gameDurationScore();
+      averageGoldScore(that.kdaData.averageGoldAt10, 1);
+      averageGoldScore(that.kdaData.averageGoldAt20, 2);
+      averageGoldScore(that.kdaData.averageGoldAt30, 3);
+      averageGoldScore(that.kdaData.averageGoldAfter30, 4);
+      console.log(that.boostedScores);
     },
   },
 };
