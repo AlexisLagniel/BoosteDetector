@@ -303,8 +303,9 @@ export default {
       this.amountOfToxicChamps = amountOfToxicChamps;
       this.toxicChampsPlayed = toxicChampsPlayed;
     },
-    getRole(game) {
-      console.log(game.individualStats.timeline.lane);
+    getMainRole(list) {
+      return list.sort((a, b) => list.filter(v => v === a).length
+        - list.filter(v => v === b).length).pop();
     },
     async getRoleVariety() {
       const roleVarietyArray = [];
@@ -863,14 +864,17 @@ export default {
       console.log(that.boostedScores);
     },
     getFinalBoostingScore() {
+      const test = this.getMainRole(Object.values(this.roleVariety));
+      console.log(Object.entries(this.roleVariety[0]));
+      console.log(test);
       let points = 0;
       let numberOfStatsAnalyzed = 0;
       for (const i in this.boostedScores) {
         points += this.boostedScores[i];
         numberOfStatsAnalyzed += 1;
       }
-      console.log((points / numberOfStatsAnalyzed) * 10);
-      console.log(numberOfStatsAnalyzed);
+      this.finalBoostingScore = (points / numberOfStatsAnalyzed) * 10;
+      console.log(this.finalBoostingScore);
     },
   },
 };
