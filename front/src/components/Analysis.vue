@@ -65,7 +65,7 @@ export default {
     },
     dataLoaded() {
       this.fillData();
-      this.generateBoostingScore();
+      this.generateScores();
     },
   },
   mounted() {
@@ -120,6 +120,7 @@ export default {
         // },
       },
       kdaData: {},
+      finalBoostingScore: null,
     };
   },
   methods: {
@@ -507,7 +508,7 @@ export default {
       this.kdaData.averageFarmPerMinute = ((averageFarm / this.propsData.length) / ((averageGameDuration / 60) / this.propsData.length)).toFixed(1);
       console.log(this.kdaData);
     },
-    generateBoostingScore() {
+    generateScores() {
       const that = this;
       function mainChampToxicityScore() {
         const mainChampionscore = that.mainChampionToxicity;
@@ -590,17 +591,27 @@ export default {
         const averageFarmScore = that.kdaData.averageFarm;
         const averageFarmPerMinScore = that.kdaData.averageFarmPerMinute;
 
-        if (averageFarmScore < 100) {
+        if (averageFarmScore < 70) {
           that.boostedScores.averageFarm = 0;
-        } else if (averageFarmScore > 100 && averageFarmScore <= 120) {
+        } else if (averageFarmScore > 70 && averageFarmScore <= 90) {
+          that.boostedScores.averageFarm = 1;
+        } else if (averageFarmScore > 70 && averageFarmScore <= 90) {
           that.boostedScores.averageFarm = 2;
-        } else if (averageFarmScore > 120 && averageFarmScore <= 140) {
+        } else if (averageFarmScore > 90 && averageFarmScore <= 110) {
+          that.boostedScores.averageFarm = 3;
+        } else if (averageFarmScore > 110 && averageFarmScore <= 130) {
+          that.boostedScores.averageFarm = 4;
+        } else if (averageFarmScore > 130 && averageFarmScore <= 150) {
           that.boostedScores.averageFarm = 5;
-        } else if (averageFarmScore > 140 && averageFarmScore <= 150) {
-          that.boostedScores.averageFarm = 7;
         } else if (averageFarmScore > 150 && averageFarmScore <= 170) {
+          that.boostedScores.averageFarm = 6;
+        } else if (averageFarmScore > 190 && averageFarmScore <= 210) {
+          that.boostedScores.averageFarm = 7;
+        } else if (averageFarmScore > 210 && averageFarmScore <= 230) {
+          that.boostedScores.averageFarm = 8;
+        } else if (averageFarmScore > 250 && averageFarmScore <= 280) {
           that.boostedScores.averageFarm = 9;
-        } else if (averageFarmScore > 170) {
+        } else if (averageFarmScore > 280) {
           that.boostedScores.averageFarm = 10;
         }
 
@@ -637,7 +648,6 @@ export default {
         }
       }
       function averageGoldScore(score, index) {
-        const goldScore = score;
         let suffix = '';
         if (index === 1) {
           suffix = 'goldScoreAt10';
@@ -759,6 +769,84 @@ export default {
           that.boostedScores.wardsPlaced = 10;
         }
       }
+      function kdaScore() {
+        const kda = that.kdaData.averageKda;
+        const kills = that.kdaData.averageKills;
+        const deaths = that.kdaData.averageDeaths;
+        const assists = that.kdaData.averageAssists;
+
+        if (kda <= 1) {
+          that.boostedScores.kdaScore = 0;
+        } else if (kda > 1 && kda <= 1.5) {
+          that.boostedScores.kdaScore = 1;
+        } else if (kda > 1.5 && kda <= 2) {
+          that.boostedScores.kdaScore = 2;
+        } else if (kda > 2 && kda <= 2.5) {
+          that.boostedScores.kdaScore = 4;
+        } else if (kda > 2.5 && kda <= 3) {
+          that.boostedScores.kdaScore = 6;
+        } else if (kda > 3 && kda <= 3.5) {
+          that.boostedScores.kdaScore = 8;
+        } else if (kda > 3.5 && kda <= 4) {
+          that.boostedScores.kdaScore = 9;
+        } else if (kda > 4) {
+          that.boostedScores.kdaScore = 10;
+        }
+
+        if (kills <= 1) {
+          that.boostedScores.killsScore = 0;
+        } else if (kills > 1 && kills <= 2) {
+          that.boostedScores.killsScore = 1;
+        } else if (kills > 2 && kills <= 3) {
+          that.boostedScores.killsScore = 2;
+        } else if (kills > 3 && kills <= 4) {
+          that.boostedScores.killsScore = 4;
+        } else if (kills > 4 && kills <= 5) {
+          that.boostedScores.killsScore = 5;
+        } else if (kills > 5 && kills <= 6) {
+          that.boostedScores.killsScore = 6;
+        } else if (kills > 6 && kills <= 7) {
+          that.boostedScores.killsScore = 8;
+        } else if (kills > 7 && kills <= 8) {
+          that.boostedScores.killsScore = 9;
+        } else if (kills > 8) {
+          that.boostedScores.killsScore = 10;
+        }
+
+        if (deaths >= 12) {
+          that.boostedScores.deathsScore = 0;
+        } else if (deaths < 12 && deaths >= 10) {
+          that.boostedScores.deathsScore = 2;
+        } else if (deaths < 10 && deaths >= 8) {
+          that.boostedScores.deathsScore = 4;
+        } else if (deaths < 8 && deaths >= 6) {
+          that.boostedScores.deathsScore = 6;
+        } else if (deaths < 6 && deaths >= 4) {
+          that.boostedScores.deathsScore = 7;
+        } else if (deaths < 4 && deaths >= 3) {
+          that.boostedScores.deathsScore = 8;
+        } else if (deaths < 3 && deaths >= 2) {
+          that.boostedScores.deathsScore = 9;
+        } else if (deaths < 2) {
+          that.boostedScores.deathsScore = 10;
+        }
+
+        if (assists <= 3) {
+          that.boostedScores.assistsScore = 0;
+        } else if (assists > 3 && assists <= 5) {
+          that.boostedScores.assistsScore = 1;
+        } else if (assists > 5 && assists <= 8) {
+          that.boostedScores.assistsScore = 3;
+        } else if (assists > 8 && assists <= 10) {
+          that.boostedScores.assistsScore = 5;
+        } else if (assists > 10 && assists <= 13) {
+          that.boostedScores.assistsScore = 7;
+        } else if (assists > 13 && assists <= 15) {
+          that.boostedScores.assistsScore = 8;
+        } else if (assists > 15 && assists <= 18) {
+          that.boostedScores.assistsScore = 10;
+        }
+      }
 
       mainChampToxicityScore();
       winRateScore();
@@ -770,7 +858,19 @@ export default {
       averageGoldScore(that.kdaData.averageGoldAt30, 3);
       averageGoldScore(that.kdaData.averageGoldAfter30, 4);
       visionScore();
+      kdaScore();
+      this.getFinalBoostingScore();
       console.log(that.boostedScores);
+    },
+    getFinalBoostingScore() {
+      let points = 0;
+      let numberOfStatsAnalyzed = 0;
+      for (const i in this.boostedScores) {
+        points += this.boostedScores[i];
+        numberOfStatsAnalyzed += 1;
+      }
+      console.log((points / numberOfStatsAnalyzed) * 10);
+      console.log(numberOfStatsAnalyzed);
     },
   },
 };

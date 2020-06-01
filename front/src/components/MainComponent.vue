@@ -113,8 +113,6 @@ export default {
           }
         }
       }
-      // eslint-disable-next-line no-restricted-syntax
-      console.table(this.gatheredStats);
     },
     getChampionById(id) {
       // eslint-disable-next-line guard-for-in
