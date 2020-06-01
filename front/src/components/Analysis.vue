@@ -864,9 +864,6 @@ export default {
       console.log(that.boostedScores);
     },
     getFinalBoostingScore() {
-      const test = this.getMainRole(Object.values(this.roleVariety));
-      console.log(Object.entries(this.roleVariety[0]));
-      console.log(test);
       let points = 0;
       let numberOfStatsAnalyzed = 0;
       for (const i in this.boostedScores) {
