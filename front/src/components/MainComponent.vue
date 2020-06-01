@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <analysis v-bind:props-data="gatheredStats" class="chart"></analysis>
+    <analysis v-bind:props-data="gatheredStats" :rank="rank" :tier="tier" class="chart"></analysis>
   </div>
 </template>
 <script>
@@ -27,6 +27,8 @@ export default {
   props: {
     globalWinRate: String,
     amountOfGames: Number,
+    rank: String,
+    tier: String,
   },
   mounted() {
     this.queryInfoByUsername();
@@ -100,6 +102,7 @@ export default {
                 championId: individualMatch.participants[participantId - 1].championId,
                 championName: championNameQueried,
                 name: player.player.summonerName,
+                tier: player.player.tier,
                 globalWinRate: this.globalWinRate,
                 amountOfGames: this.amountOfGames,
                 gameDuration: individualMatch.gameDuration,

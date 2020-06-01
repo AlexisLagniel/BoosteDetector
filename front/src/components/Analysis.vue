@@ -72,6 +72,8 @@ export default {
   },
   props: {
     propsData: Array,
+    rank: String,
+    tier: String,
   },
   data() {
     return {
@@ -121,9 +123,6 @@ export default {
     };
   },
   methods: {
-    getRandomInt() {
-      return Math.floor(Math.random() * (50 - 5 + 1)) + 5;
-    },
     fillData() {
       const that = this;
       function fullFillTrackingDataLabels() {
@@ -596,11 +595,11 @@ export default {
         } else if (averageFarmScore > 100 && averageFarmScore <= 120) {
           that.boostedScores.averageFarm = 2;
         } else if (averageFarmScore > 120 && averageFarmScore <= 140) {
-          that.boostedScores.averageFarm = 4;
+          that.boostedScores.averageFarm = 5;
         } else if (averageFarmScore > 140 && averageFarmScore <= 150) {
-          that.boostedScores.averageFarm = 6;
+          that.boostedScores.averageFarm = 7;
         } else if (averageFarmScore > 150 && averageFarmScore <= 170) {
-          that.boostedScores.averageFarm = 8;
+          that.boostedScores.averageFarm = 9;
         } else if (averageFarmScore > 170) {
           that.boostedScores.averageFarm = 10;
         }
@@ -610,11 +609,11 @@ export default {
         } else if (averageFarmPerMinScore > 3 && averageFarmPerMinScore <= 4.5) {
           that.boostedScores.averageFarmPerMinute = 2;
         } else if (averageFarmPerMinScore > 4.5 && averageFarmPerMinScore <= 5.5) {
-          that.boostedScores.averageFarmPerMinute = 4;
+          that.boostedScores.averageFarmPerMinute = 5;
         } else if (averageFarmPerMinScore > 5.5 && averageFarmPerMinScore <= 6.5) {
-          that.boostedScores.averageFarmPerMinute = 6;
+          that.boostedScores.averageFarmPerMinute = 7;
         } else if (averageFarmPerMinScore > 6.5 && averageFarmPerMinScore <= 7.5) {
-          that.boostedScores.averageFarmPerMinute = 8;
+          that.boostedScores.averageFarmPerMinute = 9;
         } else if (averageFarmPerMinScore > 7.5) {
           that.boostedScores.averageFarmPerMinute = 10;
         }
@@ -650,8 +649,6 @@ export default {
           suffix = 'goldScoreAfter30';
         }
 
-        console.log(score);
-        console.log('score de farm');
         if (index === 1) {
           if (score <= 250) {
             that.boostedScores[suffix] = 0;
@@ -682,15 +679,97 @@ export default {
           }
         }
       }
+      function rankScore() {
+        const { rank } = that;
+        const { tier } = that;
+
+        if (tier === 'IRON') {
+          that.boostedScores.rankScore = 0;
+        } else if (tier === 'BRONZE') {
+          that.boostedScores.rankScore = 1;
+        } else if (tier === 'SILVER') {
+          that.boostedScores.rankScore = 3;
+        } else if (tier === 'GOLD') {
+          that.boostedScores.rankScore = 4;
+        } else if (tier === 'PLATINUM') {
+          that.boostedScores.rankScore = 6;
+        } else if (tier === 'DIAMOND' && rank === 'IV') {
+          that.boostedScores.rankScore = 7;
+        } else if (tier === 'DIAMOND' && (rank === 'III' || rank === 'II' || rank === 'I')) {
+          that.boostedScores.rankScore = 8;
+        } else {
+          that.boostedScores.rankScore = 10;
+        }
+      }
+      function visionScore() {
+        const { averageVisionScorePerMinute } = that.kdaData;
+        const { averageVisionWardsBoughtInGame } = that.kdaData;
+        const { averageWardsPlaced } = that.kdaData;
+
+        // average vision score
+        if (averageVisionScorePerMinute <= 0.3) {
+          that.boostedScores.averageVisionScore = 0;
+        } else if (averageVisionScorePerMinute > 0.3 && averageVisionScorePerMinute <= 0.5) {
+          that.boostedScores.averageVisionScore = 2;
+        } else if (averageVisionScorePerMinute > 0.5 && averageVisionScorePerMinute <= 0.8) {
+          that.boostedScores.averageVisionScore = 4;
+        } else if (averageVisionScorePerMinute > 0.8 && averageVisionScorePerMinute <= 1) {
+          that.boostedScores.averageVisionScore = 6;
+        } else if (averageVisionScorePerMinute > 1 && averageVisionScorePerMinute <= 1.5) {
+          that.boostedScores.averageVisionScore = 8;
+        } else if (averageVisionScorePerMinute > 1.5) {
+          that.boostedScores.averageVisionScore = 10;
+        }
+
+        // vision wards bought score
+        if (averageVisionWardsBoughtInGame <= 0.5) {
+          that.boostedScores.visionWardsScore = 0;
+        } else if (averageVisionWardsBoughtInGame > 0.5 && averageVisionWardsBoughtInGame <= 1) {
+          that.boostedScores.visionWardsScore = 1;
+        } else if (averageVisionWardsBoughtInGame > 1 && averageVisionWardsBoughtInGame <= 1.5) {
+          that.boostedScores.visionWardsScore = 2;
+        } else if (averageVisionWardsBoughtInGame > 1.5 && averageVisionWardsBoughtInGame <= 2) {
+          that.boostedScores.visionWardsScore = 4;
+        } else if (averageVisionWardsBoughtInGame > 2 && averageVisionWardsBoughtInGame <= 2.5) {
+          that.boostedScores.visionWardsScore = 6;
+        } else if (averageVisionWardsBoughtInGame > 2.5 && averageVisionWardsBoughtInGame <= 3) {
+          that.boostedScores.visionWardsScore = 8;
+        } else if (averageVisionWardsBoughtInGame > 3 && averageVisionWardsBoughtInGame <= 4) {
+          that.boostedScores.visionWardsScore = 9;
+        } else if (averageVisionWardsBoughtInGame > 4) {
+          that.boostedScores.visionWardsScore = 10;
+        }
+
+        // vision wards bought score
+        if (averageWardsPlaced <= 2) {
+          that.boostedScores.wardsPlaced = 0;
+        } else if (averageWardsPlaced > 2 && averageWardsPlaced <= 4) {
+          that.boostedScores.wardsPlaced = 1;
+        } else if (averageWardsPlaced > 4 && averageWardsPlaced <= 6) {
+          that.boostedScores.wardsPlaced = 2;
+        } else if (averageWardsPlaced > 10 && averageWardsPlaced <= 15) {
+          that.boostedScores.wardsPlaced = 4;
+        } else if (averageWardsPlaced > 15 && averageWardsPlaced <= 20) {
+          that.boostedScores.wardsPlaced = 6;
+        } else if (averageWardsPlaced > 20 && averageWardsPlaced <= 25) {
+          that.boostedScores.wardsPlaced = 8;
+        } else if (averageWardsPlaced > 25 && averageWardsPlaced <= 30) {
+          that.boostedScores.wardsPlaced = 9;
+        } else if (averageWardsPlaced > 30) {
+          that.boostedScores.wardsPlaced = 10;
+        }
+      }
 
       mainChampToxicityScore();
       winRateScore();
       farmScore();
       gameDurationScore();
+      rankScore();
       averageGoldScore(that.kdaData.averageGoldAt10, 1);
       averageGoldScore(that.kdaData.averageGoldAt20, 2);
       averageGoldScore(that.kdaData.averageGoldAt30, 3);
       averageGoldScore(that.kdaData.averageGoldAfter30, 4);
+      visionScore();
       console.log(that.boostedScores);
     },
   },

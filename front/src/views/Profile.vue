@@ -15,7 +15,7 @@
               </div>
             </div>
         </div>
-        <main-component v-bind:amount-of-games="amountOfGames" :global-win-rate="globalWinRate"  class="border main-component">
+        <main-component v-bind:amount-of-games="amountOfGames" :global-win-rate="globalWinRate" :rank="summonerProfileInfo[defineSoloQueuePlaceInData()].rank" :tier="summonerProfileInfo[defineSoloQueuePlaceInData()].tier" class="border main-component">
         </main-component>
       </b-container>
     </div>
