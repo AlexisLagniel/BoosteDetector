@@ -2,9 +2,7 @@
     <div>
       <div class="background">
         <div class="center-content">
-          <div class="main-picture">
-
-          </div>
+          <img class="dapoute" src="../assets/images/dapoute.svg">
           <div class="inputs">
           <input
           type="text"
@@ -60,14 +58,14 @@ export default {
     overflow: hidden;
     background-color: #f7f7f7;
     display: flex;
+    background-position: center;
+    background-image: url("../assets/images/wallpaper.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
   }
   .center-content {
-    display: flex;
+    display: block;
     margin: auto;
-    width: 800px;
-  }
-  .main-picture {
-    width: 100%;
   }
   .inputs {
     margin: auto;

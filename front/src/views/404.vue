@@ -21,10 +21,6 @@ export default {
 </script>
 
 <style scoped>
-.dapoute{
-  width: 90px;
-  height: 90px;
-}
 .title{
  color: white;
   font-size: 55px;
