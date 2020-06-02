@@ -2,14 +2,15 @@
     <div>
       <div class="background">
         <div class="center-content">
-          <img class="dapoute" src="../assets/images/dapoute.svg">
+          <span class="tooltip">Hello I am Dapoute, king of boosteds let me guide you!</span>
+          <img class="dapoute" src="../assets/images/mini-logo_boosted.svg">
           <div class="inputs">
           <input
           type="text"
           id="searchProfile"
           v-model="profileName"
           v-on:keyup.enter="redirectToProfile()"
-          placeholder="Rechercher un joueur"
+          placeholder="Search a player"
           >
         <input
           type="submit"
@@ -84,7 +85,7 @@ export default {
     background-image: url("../assets/images/monkey-button.png");
     background-size: cover;
     background-position: 100% 50%;
-    background-color: #00cc66;
+    background-color: rgba(50, 96, 188, 0.7);
     width: 80px;
     padding: 5px;
     cursor: pointer;
@@ -93,5 +94,20 @@ export default {
   }
   textarea:focus, input:focus{
     outline: none;
+  }
+  .tooltip {
+    width: 240px;
+    font-family: Muli;
+    background-color:black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    color: white;
+    font-size: 20px;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 15px;
+    cursor: pointer;
   }
 </style>

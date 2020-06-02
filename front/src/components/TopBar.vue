@@ -1,13 +1,17 @@
 <template>
     <div>
       <div class="topBar">
+        <router-link
+          to="/" class="dapoute-icon">
+            <img  src="../assets/images/Logo_complet_-_boosted_1.svg">
+        </router-link>
         <div class="inputs">
           <input
           type="text"
           id="searchProfile"
           v-model="profileName"
           v-on:keyup.enter="redirectToProfile()"
-          placeholder="Rechercher un joueur"
+          placeholder="Search a player"
           >
       </div>
       </div>
