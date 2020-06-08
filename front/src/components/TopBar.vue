@@ -56,15 +56,21 @@ export default {
     height: 35px;
     display: flex;
     position: absolute;
+    padding: 15px;
     right: 50px;
     top: 50%;
     transform: translateY(-50%);
   }
+  .inputs input{
+    background-color: white;
+  }
   #searchProfile {
     width: 300px;
+    font-family: Muli;
     height: 50%;
     opacity: 0.85;
     padding: 5px;
     margin-right: 5px;
+    background-color: white;
   }
 </style>

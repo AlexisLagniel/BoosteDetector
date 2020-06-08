@@ -10,7 +10,7 @@
           id="searchProfile"
           v-model="profileName"
           v-on:keyup.enter="redirectToProfile()"
-          placeholder="Search a player"
+          placeholder="Search a player..."
           >
         <input
           type="submit"
@@ -57,7 +57,6 @@ export default {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-color: #f7f7f7;
     display: flex;
     background-position: center;
     background-image: url("../assets/images/wallpaper.jpg");
@@ -78,7 +77,9 @@ export default {
     height: 100%;
     opacity: 0.85;
     padding: 5px;
+    border: none!important;
     margin-right: 5px;
+    outline: none!important;
   }
   #submit {
     height: 138%!important;

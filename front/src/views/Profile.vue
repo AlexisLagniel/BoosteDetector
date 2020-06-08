@@ -4,7 +4,7 @@
     <div class="background">
       <b-container v-if="dataLoaded" class="flex main-content content">
         <div class="12 profile">
-            <div class="main-information-block border">
+            <div class="main-information-block">
               <img v-bind:src=this.summonerProfileImage>
               <div class="profile-text nomargin">
                 <h3>{{summonerProfileInfo[defineSoloQueuePlaceInData()].summonerName}}</h3>
@@ -15,7 +15,7 @@
               </div>
             </div>
         </div>
-        <main-component v-bind:amount-of-games="amountOfGames" :global-win-rate="globalWinRate" :rank="summonerProfileInfo[defineSoloQueuePlaceInData()].rank" :tier="summonerProfileInfo[defineSoloQueuePlaceInData()].tier" class="border main-component">
+        <main-component v-bind:amount-of-games="amountOfGames" :global-win-rate="globalWinRate" :rank="summonerProfileInfo[defineSoloQueuePlaceInData()].rank" :tier="summonerProfileInfo[defineSoloQueuePlaceInData()].tier" class="main-component">
         </main-component>
       </b-container>
     </div>
@@ -105,10 +105,13 @@ export default {
     max-width: 100vw;
     overflow: hidden;
     display: flex;
+    background-color: #2c2f33;
+    min-height: 100vh;
   }
   .main-information-block {
     width: 300px;
-    background-color: white;
+    background-color: #464B52;
+    padding: 10px;
   }
   .main-information-block img{
     width: 120px;
@@ -121,13 +124,14 @@ export default {
     margin-bottom: 10px;
     margin-top: 10px;
     font-size: 30px;
-    color: #12055e;
+    color: white;
   }
   p{
     font-size: 18px;
     margin-bottom: 5px;
     font-family: 'Avenir', Helvetica, Arial, sans-serif!important;
     font-weight: 600;
+    color: white;
   }
   .nomargin{
     margin: 0;
@@ -147,7 +151,8 @@ export default {
   }
   .main-component {
     width: 66.666%;
-    background-color: white;
+    background-color: #464B52;
+    padding: 30px;
   }
 
 </style>
