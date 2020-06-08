@@ -1,41 +1,48 @@
 <template>
     <div>
-      <div class="stat-line">
+      <div class="summarize">
+        <h4>{{finalBoostingScore}}</h4>
+        <radar-chart v-if="boostingScoreIsGenerated" :chartData="boostingScoresCollection" :options="options"></radar-chart>
+      </div>
+      <div class="in-depth" v-show="!checkInDepth">
+        <div class="stat-line">
         <div class="individualGraph">
-          <bar-chart v-if="dataLoaded" :chartData="roleVarietyCollection" :options="options"></bar-chart>
+          <bar-chart v-if="boostingScoreIsGenerated" :chartData="roleVarietyCollection" :options="options"></bar-chart>
         </div>
         <div class="individualGraph">
-          <doughnut v-if="dataLoaded" :chartData="winRateCollection" :options="options"></doughnut>
+          <doughnut v-if="boostingScoreIsGenerated" :chartData="winRateCollection" :options="options"></doughnut>
         </div>
       </div>
       <div class="stat-line">
         <div class="individualGraph">
-          <doughnut v-if="dataLoaded" :chartData="amountOfToxicChampsCollection" :options="options"></doughnut>
+          <doughnut v-if="boostingScoreIsGenerated" :chartData="amountOfToxicChampsCollection" :options="options"></doughnut>
         </div>
         <div class="individualGraph">
-          <doughnut v-if="dataLoaded" :chartData="globalWinRateCollection" :options="options"></doughnut>
+          <doughnut v-if="boostingScoreIsGenerated" :chartData="globalWinRateCollection" :options="options"></doughnut>
         </div>
       </div>
       <div class="stat-line">
         <div class="individualGraph">
-          <bar-chart v-if="dataLoaded" :chartData="averageKdaCollection" :options="options"></bar-chart>
+          <bar-chart v-if="boostingScoreIsGenerated" :chartData="averageKdaCollection" :options="options"></bar-chart>
         </div>
         <div class="individualGraph">
-          <bar-chart v-if="dataLoaded" :chartData="averageGoldDeltaCollection" :options="options"></bar-chart>
+          <bar-chart v-if="boostingScoreIsGenerated" :chartData="averageGoldDeltaCollection" :options="options"></bar-chart>
         </div>
       </div>
       <div class="stat-line">
         <div class="individualGraph">
           <div>
-            <line-chart v-if="dataLoaded" :chartData="kdaTrackingCollection" :options="options"></line-chart>
+            <line-chart v-if="boostingScoreIsGenerated" :chartData="kdaTrackingCollection" :options="options"></line-chart>
           </div>
         </div>
         <div class="individualGraph">
           <div>
-            <radar-chart v-if="dataLoaded" :chartData="visionCollection" :options="options"></radar-chart>
+            <radar-chart v-if="boostingScoreIsGenerated" :chartData="visionCollection" :options="options"></radar-chart>
           </div>
         </div>
       </div>
+      </div>
+
     </div>
 </template>
 
@@ -54,9 +61,6 @@ export default {
     RadarChart,
   },
   watch: {
-    winRate() {
-      this.fillData();
-    },
     propsData() {
       this.getWinRate();
       this.getRoleVariety();
@@ -64,8 +68,10 @@ export default {
       this.singleGameAnalysis();
     },
     dataLoaded() {
-      this.fillData();
       this.generateScores();
+    },
+    boostingScoreIsGenerated() {
+      this.fillData();
     },
   },
   mounted() {
@@ -78,6 +84,7 @@ export default {
   data() {
     return {
       dataLoaded: false,
+      boostingScoreIsGenerated: false,
       winRate: 0,
       globalWinRate: 0,
       totalAmountOfGames: 0,
@@ -91,6 +98,7 @@ export default {
       kdaTrackingCollection: null,
       visionCollection: null,
       multiKillsCollection: null,
+      boostingScoresCollection: null,
       boostedScores: {},
       toxicChampions: [{
         tier: 1,
@@ -121,6 +129,7 @@ export default {
       },
       kdaData: {},
       finalBoostingScore: null,
+      checkInDepth: false,
     };
   },
   methods: {
@@ -242,6 +251,21 @@ export default {
             label: ['Average gold per minute'],
             backgroundColor: '#b3ffd9',
             data: [this.kdaData.averageGoldAt10, this.kdaData.averageGoldAt20, this.kdaData.averageGoldAt30, this.kdaData.averageGoldAfter30],
+          },
+        ],
+      };
+      this.boostingScoresCollection = {
+        labels: ['Assists Scores', 'Average Champion Toxicity', 'Average Far Per Minute', 'Average Vision Score', 'Current Win Rate', 'Death Score', 'Game Duration Score',
+          'Global Win Rate', 'Gold Score After 30', 'Gold Score at 10', 'Gold Score at 20', 'Gold Score at 30', 'Kda Score', 'Kills Score', 'Main Champion Toxicity Score',
+          'Elo Rank Score', 'Vision Wards Score'],
+        datasets: [
+          {
+            label: ['Overview Score'],
+            backgroundColor: ['rgba(200,0,0,0.2)'],
+            data: [this.boostedScores.assistsScore, this.boostedScores.averageChampionToxicity, this.boostedScores.averageFarmPerMinute, this.boostedScores.averageVisionScore,
+              this.boostedScores.currentWinRate, this.boostedScores.deathsScore, this.boostedScores.gameDuration, this.boostedScores.globalWinRate, this.boostedScores.goldScoreAfter30,
+              this.boostedScores.goldScoreAt10, this.boostedScores.goldScoreAt20, this.boostedScores.goldScoreAt30, this.boostedScores.kdaScore, this.boostedScores.killsScore,
+              this.boostedScores.mainChampionToxicity, this.boostedScores.rank, this.boostedScores.visionWardsScore],
           },
         ],
       };
@@ -871,6 +895,7 @@ export default {
         numberOfStatsAnalyzed += 1;
       }
       this.finalBoostingScore = (points / numberOfStatsAnalyzed) * 10;
+      this.boostingScoreIsGenerated = true;
       console.log(this.finalBoostingScore);
     },
   },
