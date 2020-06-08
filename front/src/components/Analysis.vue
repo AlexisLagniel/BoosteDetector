@@ -1,49 +1,64 @@
 <template>
     <div>
-      <div class="summarize">
-        <h4>{{finalBoostingScore}}</h4>
-        <radar-chart v-if="boostingScoreIsGenerated" :chartData="boostingScoresCollection" :options="options"></radar-chart>
+   <div class="lol" v-if="boostingScoreIsGenerated">
+      <div v-show="!checkInDepth" class="summarize">
+         <div v-if="finalBoostingScore < 50">
+            <h2 class="boosting-score boosted">{{finalBoostingScore}}%</h2>
+            <p class="advice">That person is boosted Dapoute would reccomand to dodge</p>
+         </div>
+         <div v-else-if="finalBoostingScore > 50 && finalBoostingScore < 70">
+            <h2 class="boosting-score medium">{{finalBoostingScore}}%</h2>
+            <p class="advice">This player is fine you can trust him</p>
+         </div>
+         <div v-else-if="finalBoostingScore > 70">
+            <h2 class="boosting-score good">{{finalBoostingScore}}%</h2>
+            <p class="advice">This is a good player</p>
+         </div>
+         <radar-chart v-if="boostingScoreIsGenerated" :chartData="boostingScoresCollection" :options="options"></radar-chart>
+        <p class="next-button" @click="checkInDepth = true">
+          See more ->
+        </p>
       </div>
-      <div class="in-depth" v-show="!checkInDepth">
-        <div class="stat-line">
-        <div class="individualGraph">
-          <bar-chart v-if="boostingScoreIsGenerated" :chartData="roleVarietyCollection" :options="options"></bar-chart>
-        </div>
-        <div class="individualGraph">
-          <doughnut v-if="boostingScoreIsGenerated" :chartData="winRateCollection" :options="options"></doughnut>
-        </div>
+      <div v-show="checkInDepth" class="in-depth" >
+         <div class="stat-line">
+            <div class="individualGraph">
+               <bar-chart v-if="boostingScoreIsGenerated" :chartData="roleVarietyCollection" :options="options"></bar-chart>
+            </div>
+            <div class="individualGraph">
+               <doughnut v-if="boostingScoreIsGenerated" :chartData="winRateCollection" :options="options"></doughnut>
+            </div>
+         </div>
+         <div class="stat-line">
+            <div class="individualGraph">
+               <doughnut v-if="boostingScoreIsGenerated" :chartData="amountOfToxicChampsCollection" :options="options"></doughnut>
+            </div>
+            <div class="individualGraph">
+               <doughnut v-if="boostingScoreIsGenerated" :chartData="globalWinRateCollection" :options="options"></doughnut>
+            </div>
+         </div>
+         <div class="stat-line">
+            <div class="individualGraph">
+               <bar-chart v-if="boostingScoreIsGenerated" :chartData="averageKdaCollection" :options="options"></bar-chart>
+            </div>
+            <div class="individualGraph">
+               <bar-chart v-if="boostingScoreIsGenerated" :chartData="averageGoldDeltaCollection" :options="options"></bar-chart>
+            </div>
+         </div>
+         <div class="stat-line">
+            <div class="individualGraph">
+               <div>
+                  <line-chart v-if="boostingScoreIsGenerated" :chartData="kdaTrackingCollection" :options="options"></line-chart>
+               </div>
+            </div>
+            <div class="individualGraph">
+               <div>
+                  <radar-chart v-if="boostingScoreIsGenerated" :chartData="visionCollection" :options="options"></radar-chart>
+               </div>
+            </div>
+         </div>
       </div>
-      <div class="stat-line">
-        <div class="individualGraph">
-          <doughnut v-if="boostingScoreIsGenerated" :chartData="amountOfToxicChampsCollection" :options="options"></doughnut>
-        </div>
-        <div class="individualGraph">
-          <doughnut v-if="boostingScoreIsGenerated" :chartData="globalWinRateCollection" :options="options"></doughnut>
-        </div>
-      </div>
-      <div class="stat-line">
-        <div class="individualGraph">
-          <bar-chart v-if="boostingScoreIsGenerated" :chartData="averageKdaCollection" :options="options"></bar-chart>
-        </div>
-        <div class="individualGraph">
-          <bar-chart v-if="boostingScoreIsGenerated" :chartData="averageGoldDeltaCollection" :options="options"></bar-chart>
-        </div>
-      </div>
-      <div class="stat-line">
-        <div class="individualGraph">
-          <div>
-            <line-chart v-if="boostingScoreIsGenerated" :chartData="kdaTrackingCollection" :options="options"></line-chart>
-          </div>
-        </div>
-        <div class="individualGraph">
-          <div>
-            <radar-chart v-if="boostingScoreIsGenerated" :chartData="visionCollection" :options="options"></radar-chart>
-          </div>
-        </div>
-      </div>
-      </div>
-
-    </div>
+   </div>
+</div>
 </template>
 
 <script>
@@ -85,6 +100,7 @@ export default {
     return {
       dataLoaded: false,
       boostingScoreIsGenerated: false,
+      checkInDepth: false,
       winRate: 0,
       globalWinRate: 0,
       totalAmountOfGames: 0,
@@ -119,17 +135,16 @@ export default {
       options: {
         responsive: true,
         maintainAspectRatio: true,
-        // scales: {
-        //   yAxes: [{
-        //     ticks: {
-        //       beginAtZero: true,
-        //     },
-        //   }],
-        // },
+        scales: {
+          // yAxes: [{
+          //   ticks: {
+          //     beginAtZero: true,
+          //   },
+          // }],
+        },
       },
       kdaData: {},
       finalBoostingScore: null,
-      checkInDepth: false,
     };
   },
   methods: {
@@ -261,7 +276,7 @@ export default {
         datasets: [
           {
             label: ['Overview Score'],
-            backgroundColor: ['rgba(200,0,0,0.2)'],
+            backgroundColor: ['#d329b3'],
             data: [this.boostedScores.assistsScore, this.boostedScores.averageChampionToxicity, this.boostedScores.averageFarmPerMinute, this.boostedScores.averageVisionScore,
               this.boostedScores.currentWinRate, this.boostedScores.deathsScore, this.boostedScores.gameDuration, this.boostedScores.globalWinRate, this.boostedScores.goldScoreAfter30,
               this.boostedScores.goldScoreAt10, this.boostedScores.goldScoreAt20, this.boostedScores.goldScoreAt30, this.boostedScores.kdaScore, this.boostedScores.killsScore,
@@ -894,7 +909,7 @@ export default {
         points += this.boostedScores[i];
         numberOfStatsAnalyzed += 1;
       }
-      this.finalBoostingScore = (points / numberOfStatsAnalyzed) * 10;
+      this.finalBoostingScore = ((points / numberOfStatsAnalyzed) * 10).toFixed(1);
       this.boostingScoreIsGenerated = true;
       console.log(this.finalBoostingScore);
     },
@@ -908,5 +923,33 @@ export default {
 }
 .individualGraph{
   width: 50%;
+}
+.boosting-score{
+  font-size: 35px;
+  font-family: Muli;
+}
+.advice{
+  font-size: 25px;
+  font-family: Muli;
+}
+.boosted{
+    color: #fc0f03;
+}
+.medium{
+    color: #fc7f03;
+}
+.good{
+    color: #00ff79;
+}
+.next-button{
+  font-family: Muli;
+  color: #12055e;
+  border: 1px solid black;
+  font-size: 25px;
+  max-width: 150px;
+  cursor: pointer;
+  float: right;
+  margin-right: 25px;
+  padding: 5px;
 }
 </style>

@@ -4,7 +4,7 @@
     <div class="background">
       <b-container v-if="dataLoaded" class="flex main-content content">
         <div class="12 profile">
-            <div class="main-information-block border flex">
+            <div class="main-information-block border">
               <img v-bind:src=this.summonerProfileImage>
               <div class="profile-text nomargin">
                 <h3>{{summonerProfileInfo[defineSoloQueuePlaceInData()].summonerName}}</h3>
@@ -98,7 +98,8 @@ export default {
 
 <style scoped>
   .content{
-    padding: 50px;
+    padding-bottom: 50px;
+    padding-top: 50px;
   }
   .background{
     max-width: 100vw;
@@ -110,19 +111,32 @@ export default {
     background-color: white;
   }
   .main-information-block img{
-    width: 50px;
-    height: 50px;
+    width: 120px;
+    height: 120px;
+    padding-top: 15px;
   }
   h3{
     padding: 0;
     margin: 0;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    font-size: 30px;
+    color: #12055e;
+  }
+  p{
+    font-size: 18px;
+    margin-bottom: 5px;
+    font-family: 'Avenir', Helvetica, Arial, sans-serif!important;
+    font-weight: 600;
   }
   .nomargin{
     margin: 0;
     padding: 0;
   }
   .main-content {
-    width: 100%;
+    width: 1250px;
+    min-height: 500px;
+    margin: auto;
   }
   .profile {
     width: 33.333%;

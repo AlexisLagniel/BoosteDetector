@@ -46,7 +46,7 @@ export default {
   .topBar{
     width: 100%;
     height: 60px;
-    background-color: #00cc66;
+    background-color: #3206bc;
     opacity: 0.9;
     position: relative;
     display: flex;
