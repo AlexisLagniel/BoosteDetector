@@ -57,7 +57,7 @@ export default {
       const matchlist = this.rawMatchList.matches;
       for (const match of matchlist) {
         // eslint-disable-next-line no-await-in-loop
-        matchListIds.push(match.gameId);
+        await matchListIds.push(match.gameId);
       }
       if (this.matchListDetails.length > 0) {
         console.log('already done');
@@ -65,15 +65,17 @@ export default {
       }
       for (const matchId of matchListIds) {
         // eslint-disable-next-line no-await-in-loop
-        await axios.get(
+        axios.get(
           `${this.backrefs}/profile?region=euw1&query=%2Flol%2Fmatch%2Fv4%2Fmatches%2F${matchId}`,
         ).then((response) => {
           this.matchListDetails.push(response.data);
+          if (this.matchListDetails.length === this.amountOfGamesToFetch) {
+            this.fetchIndividualPerformance();
+          }
         });
       }
-      this.fetchIndividualPerformance();
     },
-    fetchIndividualPerformance() {
+    async fetchIndividualPerformance() {
       const gatheredStats = [];
       let participantId;
       function getTeamInfos(teamId) {
@@ -90,7 +92,7 @@ export default {
             participantId = player.participantId;
             const teamId = getTeamInfos(individualMatch.participants[participantId - 1].teamId);
             const championNameQueried = this.getChampionById(individualMatch.participants[participantId - 1].championId);
-            individualGameStats.push(
+            await individualGameStats.push(
               {
                 win: individualMatch.teams[teamId].win,
                 teamId: individualMatch.participants[participantId - 1].teamId,
@@ -109,10 +111,10 @@ export default {
               },
             );
             gatheredStats.push(individualGameStats);
-            this.gatheredStats = gatheredStats;
           }
         }
       }
+      this.gatheredStats = gatheredStats;
     },
     getChampionById(id) {
       // eslint-disable-next-line guard-for-in
