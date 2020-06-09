@@ -38,7 +38,7 @@ export default {
 }
 .background{
   /* The image used */
-  background-image: url("../assets/images/wallpaper.jpg");
+  background-image: url("../assets/images/garen.jpg");
 
   /* Full height */
   height: 100%;

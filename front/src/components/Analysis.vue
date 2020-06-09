@@ -263,7 +263,7 @@ export default {
         ],
       };
       this.roleVarietyCollection = {
-        labels: ['Top', 'Jungle', 'Mid', 'Adc', 'Support', 'Not ranked'],
+        labels: ['Top', 'Jungle', 'Mid', 'Adc', 'Support', 'undefined'],
         datasets: [
           {
             label: ['Roles'],
@@ -338,7 +338,7 @@ export default {
         ],
       };
       this.boostingScoresCollection = {
-        labels: ['Main Champion Toxicity Score', 'Average Champion Toxicity', 'Average Far Per Minute', 'Average Vision Score', 'Current Win Rate', 'Game Duration Score',
+        labels: ['Main Champion Toxicity Score', 'Average Champion Toxicity', 'Average Farm Per Minute', 'Average Vision Score', 'Current Win Rate', 'Game Duration Score',
           'Global Win Rate', 'Gold Score After 30', 'Gold Score at 10', 'Gold Score at 20', 'Gold Score at 30', 'Kda Score', 'Kills Score', 'Assists Scores', 'Death Score',
           'Elo Rank Score', 'Vision Wards Score'],
         fontColor: 'white',
