@@ -45,8 +45,10 @@ export default {
       this.retrieveMatchesList();
     },
     retrieveMatchesList() {
+      const requestParams = `?queue=420&endIndex=${this.amountOfGamesToFetch}&beginIndex=0`;
       axios.get(
-        `${this.backrefs}/profile?region=euw1&query=%2Flol%2Fmatch%2Fv4%2Fmatchlists%2Fby-account%2F${this.accountId}?endIndex=${this.amountOfGamesToFetch}&beginIndex=0&queue=420`,
+        // `${this.backrefs}/profile?region=euw1&query=%2Flol%2Fmatch%2Fv4%2Fmatchlists%2Fby-account%2F${this.accountId}?endIndex=${this.amountOfGamesToFetch}&beginIndex=0&queue=420`,
+        `${this.backrefs}/matches?region=euw1&encryptedId=${this.accountId}&params=${encodeURIComponent(requestParams)}`,
       ).then((response) => {
         this.rawMatchList = response.data;
         this.fetchSingleMatchData();

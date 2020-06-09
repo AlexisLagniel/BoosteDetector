@@ -4,7 +4,7 @@
       <div v-show="!checkInDepth" class="summarize">
          <div v-if="finalBoostingScore < 50">
             <h2 class="boosting-score boosted">{{finalBoostingScore}}%</h2>
-            <p class="advice">That person is boosted Dapoute would reccomand to dodge</p>
+            <p class="advice">That person is boosted, Dapoute would reccomand to dodge</p>
          </div>
          <div v-else-if="finalBoostingScore >= 50 && finalBoostingScore <= 70">
             <h2 class="boosting-score medium">{{finalBoostingScore}}%</h2>
