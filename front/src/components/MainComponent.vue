@@ -16,7 +16,7 @@ export default {
       username: this.$route.params.username,
       accountId: '',
       encryptedSummonerId: '',
-      backrefs: 'http://localhost:3000',
+      backrefs: this.$store.getters.api_url,
       rawMatchList: {},
       matchListDetails: [],
       gatheredStats: [],
@@ -32,6 +32,7 @@ export default {
   },
   mounted() {
     this.queryInfoByUsername();
+    console.log(window.location.href);
   },
   methods: {
     async queryInfoByUsername() {

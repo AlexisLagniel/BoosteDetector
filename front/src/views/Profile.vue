@@ -39,7 +39,7 @@ export default {
       summonerProfileInfo: {},
       dataLoaded: false,
       summonerProfileImage: '',
-      backrefs: 'http://localhost:3000',
+      backrefs: this.$store.getters.api_url,
       globalWinRate: 0,
       amountOfGames: 0,
     };
