@@ -1,0 +1,20 @@
+{
+  "name": "boostedetectorglobal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy_api": "git subtree push --prefix back heroku master"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexisLagniel/BoosteDetector.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlexisLagniel/BoosteDetector/issues"
+  },
+  "homepage": "https://github.com/AlexisLagniel/BoosteDetector#readme"
+}
