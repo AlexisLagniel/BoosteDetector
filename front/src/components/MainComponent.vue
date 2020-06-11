@@ -32,7 +32,6 @@ export default {
   },
   mounted() {
     this.queryInfoByUsername();
-    console.log(window.location.href);
   },
   methods: {
     async queryInfoByUsername() {
