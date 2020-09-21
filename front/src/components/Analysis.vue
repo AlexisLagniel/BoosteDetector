@@ -520,11 +520,12 @@ export default {
         const { wardsPlaced } = individualGame[0].individualStats.stats;
         const { visionWardsBoughtInGame } = individualGame[0].individualStats.stats;
         const { totalMinionsKilled } = individualGame[0].individualStats.stats;
+        const { neutralMinionsKilled } = individualGame[0].individualStats.stats;
         averageVisionScore += visionScore;
         averageGameDuration += gameDuration;
         averageWardsPlaced += wardsPlaced;
-        averageFarm += totalMinionsKilled;
-        averageFarmPerminute += (totalMinionsKilled / (gameDuration / 60));
+        averageFarm += (totalMinionsKilled + neutralMinionsKilled);
+        averageFarmPerminute += ((totalMinionsKilled + neutralMinionsKilled) / (gameDuration / 60));
         visionScorePerMinute += (visionScore / (gameDuration / 60));
         averageVisionWardsBoughtInGame += visionWardsBoughtInGame;
         farmCollection.push((totalMinionsKilled / (gameDuration / 60)).toFixed(1));
@@ -785,7 +786,13 @@ export default {
             that.boostedScores[suffix] = 10;
           }
         } else if (index !== 1) {
-          if (score <= 300) {
+          console.log('yo');
+          console.log(score);
+          // eslint-disable-next-line no-restricted-globals
+          if (isNaN(score)) {
+            console.log('ki');
+            that.boostedScores[suffix] = 10;
+          } else if (score <= 300) {
             that.boostedScores[suffix] = 0;
           } else if (score > 300 && score <= 350) {
             that.boostedScores[suffix] = 2;
@@ -796,6 +803,8 @@ export default {
           } else if (score > 420 && score <= 450) {
             that.boostedScores[suffix] = 8;
           } else if (score > 450) {
+            that.boostedScores[suffix] = 10;
+          } else if (score === 0) {
             that.boostedScores[suffix] = 10;
           }
         }
@@ -982,7 +991,6 @@ export default {
       }
       this.finalBoostingScore = ((points / numberOfStatsAnalyzed) * 10).toFixed(1);
       this.boostingScoreIsGenerated = true;
-      console.log(this.finalBoostingScore);
     },
   },
 };
