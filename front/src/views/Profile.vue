@@ -2,6 +2,7 @@
   <div>
     <top-bar></top-bar>
     <div class="background">
+      <h4 v-if="apiKeyNotchanged" class="apikey">API Key has not been changed :( that's why you see nothing (it needs to be changed every day) Thanks!</h4>
       <b-container v-if="dataLoaded" class="flex main-content content">
         <div class="12 profile">
             <div class="main-information-block">
@@ -42,6 +43,7 @@ export default {
       backrefs: this.$store.getters.api_url,
       globalWinRate: 0,
       amountOfGames: 0,
+      apiKeyNotchanged: false,
     };
   },
   mounted() {
@@ -62,7 +64,11 @@ export default {
 
         // querying all the in depth information with the encrypted id
         this.queryProfileInfoBySummonerId();
-      });
+      })
+        .catch((error) => {
+          console.log(error);
+          this.apiKeyNotchanged = true;
+        });
     },
     queryProfileInfoBySummonerId() {
       axios.get(
@@ -153,6 +159,12 @@ export default {
     width: 66.666%;
     background-color: #464B52;
     padding: 30px;
+  }
+  .apikey {
+    color: red;
+    margin: auto;
+    max-width: 80%;
+    font-size: 40px;
   }
 
 </style>
