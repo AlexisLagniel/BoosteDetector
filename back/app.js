@@ -4,7 +4,7 @@ const port = process.env.PORT || 3000;
 const cors = require('cors');
 const axios = require('axios');
 const app = express();
-const token = 'RGAPI-6c012518-bf38-4016-8638-c9103b0e0231';
+const token = 'RGAPI-856ad02b-68ba-4aaa-8b2f-010c8ada7a0d';
 
 app.use(cors());
 
